@@ -1,5 +1,13 @@
 #home-page{
-  h1 {
-    text-align:center;
+  background:$belinko-bg-gray;
+
+  .jumbotron {
+    background: $belinko-purple;
+    color: $belinko-white;
+    text-align: center;
+
+    p {
+      font-style:italic;
+    }
   }
 }

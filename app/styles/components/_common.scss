@@ -1,0 +1,9 @@
+.btn-belinko-purple {
+  color:$belinko-white;
+  background:$belinko-purple;
+  border: 1px solid $belinko-white;
+  &:hover{
+    color: $belinko-purple;
+    background:$belinko-white;
+  }
+}

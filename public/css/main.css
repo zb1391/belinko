@@ -5809,5 +5809,22 @@ button.close {
 @media print {
   .hidden-print {
     display: none !important; } }
-#home-page h1 {
-  text-align: center; }
+.btn-belinko-purple {
+  color: #eee;
+  background: #5E35B1;
+  border: 1px solid #eee; }
+  .btn-belinko-purple:hover {
+    color: #5E35B1;
+    background: #eee; }
+
+#home-page {
+  background: #f3f3f3; }
+  #home-page .jumbotron {
+    background: #5E35B1;
+    color: #eee;
+    text-align: center; }
+    #home-page .jumbotron p {
+      font-style: italic; }
+
+body {
+  background: #f3f3f3; }

@@ -1,5 +1,14 @@
 // from node_modules
 @import "bootstrap";
 
+// variables
+@import "vars";
+
 // from components
+@import "common";
 @import "home";
+
+
+body {
+  background: $belinko-bg-gray;
+}
