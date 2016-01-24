@@ -37,6 +37,7 @@ gulp.task('sass', function() {
 
 gulp.task('watch', function() {
     gulp.watch('app/**/*.js', ['browserify'])
+    gulp.watch('app/styles/**/*.js',['sass'])
 })
 
-gulp.task('default', ['connect', 'watch'])
+gulp.task('default', ['browserify','sass','connect', 'watch'])
