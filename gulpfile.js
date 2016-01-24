@@ -23,6 +23,18 @@ gulp.task('browserify', function() {
         .pipe(gulp.dest('./public/js/'));
 })
 
+
+gulp.task('sass', function() {
+  return sass('app/styles/main.scss',{
+    loadPath: [
+      'node_modules/bootstrap-sass/assets/stylesheets/',
+      'app/styles/components/'
+    ],
+  })
+  .on('error', sass.logError)
+  .pipe(gulp.dest('./public/css/'))
+})
+
 gulp.task('watch', function() {
     gulp.watch('app/**/*.js', ['browserify'])
 })
