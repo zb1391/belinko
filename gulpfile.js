@@ -4,13 +4,11 @@ var connect = require('gulp-connect')
 // requires browserify and vinyl-source-stream
 var browserify = require('browserify')
 var source = require('vinyl-source-stream')
+var server = require('./server.js')
 
 // Connect task
 gulp.task('connect', function () {
-    connect.server({
-        root: 'public',
-        port: 4000
-    })
+  server.listen(4000);
 })
 
 gulp.task('browserify', function() {
