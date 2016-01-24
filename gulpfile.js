@@ -22,3 +22,9 @@ gulp.task('browserify', function() {
         // saves it the public/js/ directory
         .pipe(gulp.dest('./public/js/'));
 })
+
+gulp.task('watch', function() {
+    gulp.watch('app/**/*.js', ['browserify'])
+})
+
+gulp.task('default', ['connect', 'watch'])
