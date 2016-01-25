@@ -19,6 +19,8 @@ module.exports = function(karma){
       'spec/**/*.js': ['browserify']
     },
  
-    browsers: ['PhantomJS']
+    browsers: ['PhantomJS'],
+
+    singleRun: false
   });
 };

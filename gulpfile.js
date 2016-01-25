@@ -35,7 +35,14 @@ gulp.task('sass', function() {
 })
 
 gulp.task('watch', function() {
+    // recompile main.js
     gulp.watch('app/**/*.js', ['browserify'])
+   
+    // when main changes retest
+    gulp.watch('spec/**/*.js',['test'])
+    gulp.watch('public/js/main.js',['test'])
+
+    // when styling changes recompile sass
     gulp.watch('app/styles/main.scss',['sass'])
     gulp.watch('app/styles/components/*.scss',['sass'])
 })
@@ -43,7 +50,6 @@ gulp.task('watch', function() {
 gulp.task('test', function(done){
   karma.start({
     configFile: __dirname + '/karma.conf.js',
-    singleRun: true
   }, done)
 });
 
