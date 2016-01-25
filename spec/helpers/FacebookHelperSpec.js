@@ -8,24 +8,24 @@ describe('FacebookHelper',function(){
     location = $location;
   }));
   
-  describe('extractCode',function(){
+  describe('getCode',function(){
     describe('when code is present in search',function(){
       beforeEach(function(){
-        location.search="?code=test123&another=812312"
+        spyOn(location,'search').and.returnValue({code: 'test123'});
       });
 
       it('parses code from location.search',function(){
-        expect(helper.extractCode()).toEqual("test123");
+        expect(helper.getCode()).toEqual("test123");
       });
     });
 
     describe('when the code is not present',function(){
       beforeEach(function(){
-        location.search="?another=123";
+        spyOn(location,'search').and.returnValue({});
       });
 
       it('returns an empty string',function(){
-        expect(helper.extractCode()).toEqual('');
+        expect(helper.getCode()).toEqual('');
       });
     });
   });

@@ -1,29 +1,27 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var app = require('angular').module('app');
-var FB = require('fb');
 
 app.controller('HomeController',HomeController);
 
 function HomeController($scope,$injector){
-  $scope.loginUrl = FB.getLoginUrl({
-    client_id: '561265827354748', 
-    client_secret: 'ebb4ed4353b0e928c0b1093daab7b8af',
-    redirectUri: 'http://localhost:4000/my-account',
-  });
+  var FacebookHelper = $injector.get('FacebookHelper');
+
+  $scope.loginUrl = FacebookHelper.getLoginUrl();
 
 };
 
-},{"angular":9,"fb":261}],2:[function(require,module,exports){
+},{"angular":9}],2:[function(require,module,exports){
 var app = require('angular').module('app');
-var FB = require('fb');
 
 app.controller('MyAccountController',MyAccountController);
 
 function MyAccountController($scope,$injector){
-  debugger;
+  var FacebookHelper = $injector.get('FacebookHelper');
+  FacebookHelper.getToken()
+
 };
 
-},{"angular":9,"fb":261}],3:[function(require,module,exports){
+},{"angular":9}],3:[function(require,module,exports){
 require('angular')
 
 var app = angular.module('app', [require('angular-route')]);
@@ -54,23 +52,56 @@ app.config(function($routeProvider,$locationProvider){
 
 },{"angular":9}],5:[function(require,module,exports){
 var app = require('angular').module('app');
+var FB = require('fb');
 
 app.service('FacebookHelper',['$location',
 function($location){
   var $helper = this;
 
-  this.extractCode = function(){
-    var code = "";
-    var query = $location.search || "";
-    var match = query.match(/code=(([\w,-]{1,}))/g);
-    if(match) code = match[0].split("=")[1];
-    return code;
+  this.client_id = '561265827354748';
+  this.client_secret = 'ebb4ed4353b0e928c0b1093daab7b8af';
+
+  // TODO write tests
+  this.getLoginUrl = function(){
+    return FB.getLoginUrl({
+      client_id: $helper.client_id,
+      client_secret: $helper.client_secret,
+      redirectUri: 'http://localhost:4000/my-account',
+    });
+  };
+
+  // TODO write tests
+  this.getToken = function(){
+    FB.api('oauth/access_token', {
+      client_id: $helper.client_id,
+      client_secret: $helper.client_secret,
+      redirect_uri: 'http://localhost:4000/my-account',
+      code: $helper.getCode()
+    }, function (res) {
+
+      // TODO this function on success should make a request to my api
+      // to the omniauth callback endpoint
+      debugger;
+      if(!res || res.error) {
+        console.log(!res ? 'error occurred' : res.error);
+        return;
+      }
+
+      var accessToken = res.access_token;
+      var expires = res.expires ? res.expires : 0;
+    });
+  };
+
+  // extract code from the url
+  this.getCode = function(){
+    var query = $location.search() || {};
+    return query.code || "";
   };
 
 
 }]);
 
-},{"angular":9}],6:[function(require,module,exports){
+},{"angular":9,"fb":261}],6:[function(require,module,exports){
 /**
  * @license AngularJS v1.4.9
  * (c) 2010-2015 Google, Inc. http://angularjs.org
