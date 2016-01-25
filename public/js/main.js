@@ -17,8 +17,19 @@ app.controller('MyAccountController',MyAccountController);
 
 function MyAccountController($scope,$injector){
   var FacebookHelper = $injector.get('FacebookHelper');
-  FacebookHelper.getToken()
+  FacebookHelper.getToken();
 
+
+  // TODO move to a helper
+  $scope.$watch('token', function(newValue,oldValue){
+    // what am i gonna do here?
+    // i think what I want to do is this
+    // once a token is set, save it somewhere like on the window or in a cookie
+    // then make a request to belinko_api with the token
+
+    // then on success redirect to the maps page
+    // this page should just be a loading screen
+  });
 };
 
 },{"angular":9}],3:[function(require,module,exports){
@@ -57,39 +68,41 @@ var FB = require('fb');
 app.service('FacebookHelper',['$location',
 function($location){
   var $helper = this;
+  this.FB = FB;
 
   this.client_id = '561265827354748';
   this.client_secret = 'ebb4ed4353b0e928c0b1093daab7b8af';
+  this.redirect_uri = 'http://localhost:4000/my-account';
 
-  // TODO write tests
+  // return the login url for the sign in button
   this.getLoginUrl = function(){
-    return FB.getLoginUrl({
-      client_id: $helper.client_id,
+    return $helper.FB.getLoginUrl({
+      client_id:     $helper.client_id,
       client_secret: $helper.client_secret,
-      redirectUri: 'http://localhost:4000/my-account',
+      redirectUri:   $helper.redirect_uri
     });
   };
 
-  // TODO write tests
-  this.getToken = function(){
-    FB.api('oauth/access_token', {
-      client_id: $helper.client_id,
+  // make a request to get the access_token
+  this.getToken = function($scope){
+    var options = {
+      client_id:     $helper.client_id,
       client_secret: $helper.client_secret,
-      redirect_uri: 'http://localhost:4000/my-account',
-      code: $helper.getCode()
-    }, function (res) {
+      redirect_uri:  $helper.redirect_uri,
+      code:          $helper.getCode(),
+    };
 
-      // TODO this function on success should make a request to my api
-      // to the omniauth callback endpoint
-      debugger;
-      if(!res || res.error) {
-        console.log(!res ? 'error occurred' : res.error);
-        return;
-      }
+    $helper.FB.api('oauth/access_token', options, $helper.onToken.bind(null,$scope));
+  };
 
-      var accessToken = res.access_token;
-      var expires = res.expires ? res.expires : 0;
-    });
+  // sets the scope token and expires
+  this.onToken = function($scope,response){
+    if(!response || response.error){
+      console.log(!response ? 'error' : response.error);
+    }
+
+    $scope.token = response.access_token;
+    $scope.expires = response.expires || 0;
   };
 
   // extract code from the url
