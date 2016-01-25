@@ -5,6 +5,7 @@ var connect = require('gulp-connect')
 var browserify = require('browserify')
 var source = require('vinyl-source-stream')
 var server = require('./server.js')
+var karma = require('karma').Server
 
 // Connect task
 gulp.task('connect', function () {
@@ -38,5 +39,12 @@ gulp.task('watch', function() {
     gulp.watch('app/styles/main.scss',['sass'])
     gulp.watch('app/styles/components/*.scss',['sass'])
 })
+
+gulp.task('test', function(done){
+  karma.start({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }, done)
+});
 
 gulp.task('default', ['browserify','sass','connect', 'watch'])
