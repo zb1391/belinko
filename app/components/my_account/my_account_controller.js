@@ -6,7 +6,6 @@ function MyAccountController($scope,$injector){
   var FacebookHelper = $injector.get('FacebookHelper');
   FacebookHelper.getToken();
 
-
   // TODO move to a helper
   $scope.$watch('token', function(newValue,oldValue){
     // what am i gonna do here?
