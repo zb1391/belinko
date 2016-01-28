@@ -74,22 +74,26 @@ angular.module('app').factory('GeolocatorFactory', ['$window','$rootScope', func
   };
 
   Geolocator.prototype.resolve = function(position){
-    var coords = position.coords;
+    var $this = this;
+    $rootScope.$apply(function(){
+      var coords = position.coords;
 
-    this.position.latitude = coords.latitude;
-    this.position.longitude = coords.longitude;
-    $rootScope.$apply();
+      $this.position.latitude = coords.latitude;
+      $this.position.longitude = coords.longitude;
+    });
   };
 
   Geolocator.prototype.reject = function(err){
-    this.error[err.code] = err.message;
-    $rootScope.apply();
+    var $this = this;
+    $rootScope.$apply(function(){
+      $this.errors[err.code] = err.message;
+    });
   };
 
   Geolocator.prototype.getCurrentPosition = function(){
     var geo = $window.navigator.geolocation;
     if(!geo){
-      var err = {code: 'status', message: 'geolocation not supported'};
+      var err = {code: 'status', message: 'Geolocation not supported'};
       this.reject(err);
       return;
     }
