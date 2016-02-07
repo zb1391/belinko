@@ -26,7 +26,7 @@ describe('FacebookHelper',function(){
   });
 
 
-  describe('onToken',function(){
+  describe('onGet',function(){
     var deferred = {
       resolve: function(){},
       reject: function(){},
@@ -39,14 +39,14 @@ describe('FacebookHelper',function(){
 
     describe('when there is no error',function(){
       it('sets calls deferred.resolve',function(){
-        helper.onToken(deferred,{});
+        helper.onGet(deferred,{});
         expect(deferred.resolve).toHaveBeenCalled();
       });
     });
 
     describe('when there is an error', function(){
       it('calls deferred.reject',function(){
-        helper.onToken(deferred,{error: true});
+        helper.onGet(deferred,{error: true});
         expect(deferred.reject).toHaveBeenCalled();
       });
     });
