@@ -10,7 +10,10 @@ function($location,$q){
   this.client_secret = 'ebb4ed4353b0e928c0b1093daab7b8af';
   this.redirect_uri = 'http://localhost:4000/my-account';
 
-  // return the login url for the sign in button
+  /**
+   * get the login url for the sign in button
+   * @return { string }
+   */
   this.getLoginUrl = function(){
     return $helper.FB.getLoginUrl({
       client_id:     $helper.client_id,
@@ -19,8 +22,11 @@ function($location,$q){
     });
   };
 
-  // make a request to get the access_token
-  this.getToken = function($scope){
+  /**
+   * request the access_token from facebook
+   * @return { promise }
+   */
+  this.getToken = function(){
     var deferred = $q.defer();
     var options = {
       client_id:     $helper.client_id,
@@ -33,7 +39,9 @@ function($location,$q){
     return deferred.promise;
   };
 
-  // sets the scope token and expires
+  /**
+   * resolve the promise from the getToken request
+   */
   this.onToken = function(deferred,response){
     if(!response || response.error){
       deferred.reject(response.error);
@@ -42,7 +50,10 @@ function($location,$q){
     deferred.resolve(response);
   };
 
-  // extract code from the url
+  /**
+   * get the query code from the url
+   * @return { string } query.code
+   */
   this.getCode = function(){
     var query = $location.search() || {};
     return query.code || "";
