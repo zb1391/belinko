@@ -18,6 +18,7 @@ function($location,$q){
    * @return { promise } promise
    */
   this.get = function(url,options){
+    options = options || {};
     var deferred = $q.defer();
     var creds = {
       client_id:     $helper.client_id,
@@ -67,8 +68,6 @@ function($location,$q){
     };
 
     return $helper.get('oauth/access_token',options);
-    //$helper.FB.api('oauth/access_token', options, $helper.onGet.bind(null,deferred));
-    //return deferred.promise;
   };
 
   /**

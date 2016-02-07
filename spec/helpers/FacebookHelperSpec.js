@@ -25,7 +25,22 @@ describe('FacebookHelper',function(){
     });
   });
 
+  describe('get', function(){
+    beforeEach(function(){
+      spyOn(helper.FB,'api');
+    });
 
+    it('always sets options to have have the client_id and client_secret',function(){
+      helper.get('test');
+      var expected = {client_id: helper.client_id, client_secret: helper.client_secret};
+      expect(helper.FB.api.calls.argsFor(0)[1]).toEqual(expected);
+    });
+
+    it('makes a request to the facebook api',function(){
+      helper.get('test');
+      expect(helper.FB.api).toHaveBeenCalled();
+    });
+  });
   describe('onGet',function(){
     var deferred = {
       resolve: function(){},
