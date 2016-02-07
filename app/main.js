@@ -1,6 +1,6 @@
 require('angular')
 
-var app = angular.module('app', [require('angular-route')]);
+var app = angular.module('app', [require('angular-route'), require('angular-resource')]);
 
 // routing
 require('./routes.js');

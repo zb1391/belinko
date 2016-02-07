@@ -1,8 +1,8 @@
 var app = require('angular').module('app');
 var FB = require('fb');
 
-app.service('FacebookHelper',['$location',
-function($location){
+app.service('FacebookHelper',['$location','$q',
+function($location,$q){
   var $helper = this;
   this.FB = FB;
 
@@ -21,6 +21,7 @@ function($location){
 
   // make a request to get the access_token
   this.getToken = function($scope){
+    var deferred = $q.defer();
     var options = {
       client_id:     $helper.client_id,
       client_secret: $helper.client_secret,
@@ -28,17 +29,17 @@ function($location){
       code:          $helper.getCode(),
     };
 
-    $helper.FB.api('oauth/access_token', options, $helper.onToken.bind(null,$scope));
+    $helper.FB.api('oauth/access_token', options, $helper.onToken.bind(null,deferred));
+    return deferred.promise;
   };
 
   // sets the scope token and expires
-  this.onToken = function($scope,response){
+  this.onToken = function(deferred,response){
     if(!response || response.error){
-      console.log(!response ? 'error' : response.error);
+      deferred.reject(response.error);
     }
 
-    $scope.token = response.access_token;
-    $scope.expires = response.expires || 0;
+    deferred.resolve(response);
   };
 
   // extract code from the url

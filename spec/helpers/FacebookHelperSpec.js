@@ -27,22 +27,31 @@ describe('FacebookHelper',function(){
 
 
   describe('onToken',function(){
+    var deferred = {
+      resolve: function(){},
+      reject: function(){},
+    };
+
+    beforeEach(function(){
+      spyOn(deferred,'resolve');
+      spyOn(deferred,'reject');
+    });
+
     describe('when there is no error',function(){
-      beforeEach(function(){
-        scope = {};
+      it('sets calls deferred.resolve',function(){
+        helper.onToken(deferred,{});
+        expect(deferred.resolve).toHaveBeenCalled();
       });
+    });
 
-      it('sets scope.token',function(){
-        helper.onToken(scope,{access_token: 'test'});
-        expect(scope.token).toEqual('test');
-      });
-
-      it('sets scope.expires',function(){
-        helper.onToken(scope,{expires: 123});
-        expect(scope.expires).toEqual(123);
+    describe('when there is an error', function(){
+      it('calls deferred.reject',function(){
+        helper.onToken(deferred,{error: true});
+        expect(deferred.reject).toHaveBeenCalled();
       });
     });
   });
+
   describe('getCode',function(){
     describe('when code is present in search',function(){
       beforeEach(function(){
