@@ -1,34 +1,19 @@
 beforeEach(angular.mock.module("app"))
 
 describe('LoginController',function(){
-  var helper, location, scope, q, deferred, Api, location, controller, ctrl, AlertsFactory;
-  beforeEach(inject(function($controller,_FacebookHelper_, _Api_,$rootScope,$q,$location,_AlertsFactory_){
+  var helper, location, scope, q, deferred, Api,LoginHelper, controller, ctrl, AlertsFactory;
+  beforeEach(inject(function($controller,_FacebookHelper_, _Api_,$rootScope,$q,_LoginHelper_,_AlertsFactory_){
     q = $q;
     deferred = $q.defer();
     fb = _FacebookHelper_;
     Api = _Api_;
-    location = $location;
+    LoginHelper = _LoginHelper_;
     AlertsFactory = _AlertsFactory_;
     scope = $rootScope.$new();
     controller = $controller;
+    spyOn(LoginHelper,"loginFail");
+    spyOn(LoginHelper,"loginSuccess");
   }));
-
-  describe("when there is no token",function(){
-    beforeEach(function(){
-      spyOn(fb,'getCode').and.returnValue(null);
-      ctrl = controller('LoginController', {$scope: scope});
-    });
-
-    it('sets the path back to the root',function(){
-      expect(location.path()).toEqual('/');
-    });
-
-    it('adds an alert',function(){
-      var a = AlertsFactory[AlertsFactory.length-1];
-      var expected = {type: 'danger', msg: 'Failed to log in'};
-      expect(a).toEqual(expected);
-    });
-  });
 
   describe("when there is a token",function(){
     beforeEach(function(){
@@ -40,5 +25,27 @@ describe('LoginController',function(){
     it('calls login',function(){
       expect(Api.login).toHaveBeenCalled();
     }); 
+
+    describe("and login succeeds",function(){
+      beforeEach(function(){
+        deferred.resolve({data: {name: "test user"}});
+        scope.$apply();
+      });
+
+      it('calls loginSuccess',function(){
+        expect(LoginHelper.loginSuccess).toHaveBeenCalled();
+      });
+    });
+
+    describe('and login fails',function(){
+      beforeEach(function(){
+        deferred.reject({ data:{ errors:{ facebook:"test error" } } });
+        scope.$apply();
+      });
+
+      it('calls loginFail',function(){
+        expect(LoginHelper.loginFail).toHaveBeenCalled();
+      });
+    });
   });
 });
