@@ -10,6 +10,13 @@
   <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
+  <!-- alerts -->
+  <div ng-controller="AlertsController">
+    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</uib-alert>
+    <button type="button" class='btn btn-default' ng-click="addAlert({msg: 'test'})">Add Alert</button>
+  </div>
+
+  <!-- render the view -->
   <div ng-view></div>
 </body>
 </html>
