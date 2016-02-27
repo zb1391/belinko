@@ -1,22 +1,38 @@
 var app = require('angular').module('app');
 var _ = require('lodash');
 
-var apiBase = 'localhost:3000/api/v1';
+var apiBase = 'http://localhost:3000/api';
  
-app.factory('Api', ['$http', '$resource',function($http, $resource) {
+app.factory('Api', ['$http', '$resource','FacebookHelper','$q','auth',function($http, $resource,FacebookHelper,$q,auth) {
 
   return {
-
+    
     /**
      * get a token from the api
-     * @param { object } config includes the proper headers
-     * @return { promise } promise
+     * @param {Object} config includes the proper headers
+     * @return {Promise} promise
      */
-    getToken: function(config) {
-      return $http.post(apiBase + '/omniauth_callbacks/facebook/', config);
+    login: function(code) {
+      var deferred = $q.defer();
+      $http.post(apiBase + '/users',{code: code}).then(
+           onLogin.bind(null,deferred),
+           function(error){
+             deferred.reject(error);
+           });
+      return deferred.promise;
     },
-
   };
+
+  /**
+   * save the user credentials on login success
+   * @param {Promise} deferred,
+   * @param {Object} response
+   */
+  function onLogin(deferred,response){
+    auth.logIn(response);
+    deferred.resolve(response);
+  };
+
 }]);
 
 /**
@@ -24,6 +40,7 @@ app.factory('Api', ['$http', '$resource',function($http, $resource) {
  *
  */
 app.config(['$resourceProvider', '$httpProvider', function($resourceProvider, $httpProvider){
+  $httpProvider.defaults.withCredentials = true;
   $httpProvider.interceptors.push(['$q', '$location', 'auth', '$rootScope', function($q, $location, auth, $rootScope) {
     return {
       'request': function (config) {

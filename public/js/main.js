@@ -7,7 +7,7 @@ app.controller('HomeController',HomeController);
 function HomeController($scope,$injector){
   var FacebookHelper = $injector.get('FacebookHelper');
   var Geolocator = $injector.get('GeolocatorFactory');
-  
+
   $scope.geo = new Geolocator();
   $scope.loginUrl = FacebookHelper.getLoginUrl();
 
@@ -21,14 +21,14 @@ app.controller('MyAccountController',MyAccountController);
 
 function MyAccountController($scope,$injector){
   var FacebookHelper = $injector.get('FacebookHelper');
-  FacebookHelper.getToken().then(function(resp){
-    $scope.token = resp.access_token;
-    $scope.expires = resp.expires || 0;
+  var Api            = $injector.get('Api');
+
+  Api.login(FacebookHelper.getCode()).then(function(response){
+    debugger;
   });
 
   // TODO move to a helper
   $scope.$watch('token', function(newValue,oldValue){
-    debugger;
     // what am i gonna do here?
     // i need to make a request to facebook/me
     // to get the email/username/uid
@@ -121,6 +121,7 @@ function($location,$q){
   this.client_id = '561265827354748';
   this.client_secret = 'ebb4ed4353b0e928c0b1093daab7b8af';
   this.redirect_uri = 'http://localhost:4000/my-account';
+  this.permissions = 'email,user_friends';
 
   /**
    * make a request to the Facebook Api
@@ -135,8 +136,7 @@ function($location,$q){
       client_id:     $helper.client_id,
       client_secret: $helper.client_secret,
     };
-    _.extend(options, creds);
-    
+    options = _.extend(options, creds);
     $helper.FB.api(url, options, $helper.onGet.bind(null,deferred));
     return deferred.promise;    
   };
@@ -161,7 +161,8 @@ function($location,$q){
     return $helper.FB.getLoginUrl({
       client_id:     $helper.client_id,
       client_secret: $helper.client_secret,
-      redirectUri:   $helper.redirect_uri
+      redirectUri:   $helper.redirect_uri,
+      scope:         $helper.permissions,
     });
   };
 
@@ -197,22 +198,38 @@ function($location,$q){
 var app = require('angular').module('app');
 var _ = require('lodash');
 
-var apiBase = 'localhost:3000/api/v1';
+var apiBase = 'http://localhost:3000/api';
  
-app.factory('Api', ['$http', '$resource',function($http, $resource) {
+app.factory('Api', ['$http', '$resource','FacebookHelper','$q','auth',function($http, $resource,FacebookHelper,$q,auth) {
 
   return {
-
+    
     /**
      * get a token from the api
-     * @param { object } config includes the proper headers
-     * @return { promise } promise
+     * @param {Object} config includes the proper headers
+     * @return {Promise} promise
      */
-    getToken: function(config) {
-      return $http.post(apiBase + '/omniauth_callbacks/facebook/', config);
+    login: function(code) {
+      var deferred = $q.defer();
+      $http.post(apiBase + '/users',{code: code}).then(
+           onLogin.bind(null,deferred),
+           function(error){
+             deferred.reject(error);
+           });
+      return deferred.promise;
     },
-
   };
+
+  /**
+   * save the user credentials on login success
+   * @param {Promise} deferred,
+   * @param {Object} response
+   */
+  function onLogin(deferred,response){
+    auth.logIn(response);
+    deferred.resolve(response);
+  };
+
 }]);
 
 /**
@@ -220,6 +237,7 @@ app.factory('Api', ['$http', '$resource',function($http, $resource) {
  *
  */
 app.config(['$resourceProvider', '$httpProvider', function($resourceProvider, $httpProvider){
+  $httpProvider.defaults.withCredentials = true;
   $httpProvider.interceptors.push(['$q', '$location', 'auth', '$rootScope', function($q, $location, auth, $rootScope) {
     return {
       'request': function (config) {
@@ -252,13 +270,14 @@ app.factory('auth', [
     auth.isLoggedIn = false;
 
     auth.logIn = function(userParams) {
+      var data = userParams.data;
       auth.currentUser = {
-        username: userParams.user,
-        token: userParams.token,
+        username: data.name,
+        token: data.token,
       };
       auth.isLoggedIn = true;
 
-      $window.localStorage.currentUser = auth.currentUser;
+      $window.localStorage.currentUser = JSON.stringify(auth.currentUser);
     };
 
 

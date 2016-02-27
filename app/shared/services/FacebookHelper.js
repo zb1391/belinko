@@ -10,6 +10,7 @@ function($location,$q){
   this.client_id = '561265827354748';
   this.client_secret = 'ebb4ed4353b0e928c0b1093daab7b8af';
   this.redirect_uri = 'http://localhost:4000/my-account';
+  this.permissions = 'email,user_friends';
 
   /**
    * make a request to the Facebook Api
@@ -24,8 +25,7 @@ function($location,$q){
       client_id:     $helper.client_id,
       client_secret: $helper.client_secret,
     };
-    _.extend(options, creds);
-    
+    options = _.extend(options, creds);
     $helper.FB.api(url, options, $helper.onGet.bind(null,deferred));
     return deferred.promise;    
   };
@@ -50,7 +50,8 @@ function($location,$q){
     return $helper.FB.getLoginUrl({
       client_id:     $helper.client_id,
       client_secret: $helper.client_secret,
-      redirectUri:   $helper.redirect_uri
+      redirectUri:   $helper.redirect_uri,
+      scope:         $helper.permissions,
     });
   };
 

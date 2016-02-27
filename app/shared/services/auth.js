@@ -12,13 +12,14 @@ app.factory('auth', [
     auth.isLoggedIn = false;
 
     auth.logIn = function(userParams) {
+      var data = userParams.data;
       auth.currentUser = {
-        username: userParams.user,
-        token: userParams.token,
+        username: data.name,
+        token: data.token,
       };
       auth.isLoggedIn = true;
 
-      $window.localStorage.currentUser = auth.currentUser;
+      $window.localStorage.currentUser = JSON.stringify(auth.currentUser);
     };
 
 
@@ -26,18 +27,18 @@ app.factory('auth', [
       auth.currentUser = null;
       auth.isLoggedIn = false;
 
-      $window.localStorage.currentUser = {};
+      $window.localStorage.currentUser = "{}";
     };
 
 
     auth.setPermissions = function(permissions) {
       auth.currentUser.permissions = permissions;
-      $window.localStorage.currentUser = auth.currentUser;
+      $window.localStorage.currentUser = Json.stringify(auth.currentUser);
     };
 
 
     auth.initUser = function(userParams) {
-      auth.currentUser = $window.localStorage.currentUser || {};
+      auth.currentUser = JSON.parse($window.localStorage.currentUser || "{}");
       if(auth.currentUser.token) {
         auth.isLoggedIn = true;
       }
