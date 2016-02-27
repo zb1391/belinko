@@ -16,9 +16,7 @@ app.factory('Api', ['$http', '$resource','FacebookHelper','$q','auth',function($
       var deferred = $q.defer();
       $http.post(apiBase + '/users',{code: code}).then(
            onLogin.bind(null,deferred),
-           function(error){
-             deferred.reject(error);
-           });
+           onLogout.bind(null,deferred));
       return deferred.promise;
     },
   };
@@ -33,6 +31,15 @@ app.factory('Api', ['$http', '$resource','FacebookHelper','$q','auth',function($
     deferred.resolve(response);
   };
 
+  /**
+   * log out of the system on login fail
+   * @param {Promise} deferred,
+   * @param {Object} response
+   */
+  function onLogout(deferred,response){
+    auth.logOut();
+    deferred.reject(response);
+  };
 }]);
 
 /**
