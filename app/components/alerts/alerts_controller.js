@@ -7,10 +7,4 @@ app.controller('AlertsController', function ($scope,$injector){
   $scope.addAlert   = Alerts.addAlert;
   $scope.closeAlert = Alerts.closeAlert;
 
-  /*
-   * always update the alerts array
-   */
-  $scope.$watch(Alerts.getAlerts,function(newValue,oldValue){
-    if(newValue) $scope.alerts = Alerts.getAlerts();
-  });
 });
