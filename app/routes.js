@@ -10,6 +10,10 @@ app.config(function($routeProvider,$locationProvider){
       templateUrl: 'partials/my_account.html',
       controller: 'MyAccountController',
     })
+    .when('/login',{
+      templateUrl: 'partials/login.html',
+      controller: 'LoginController',
+    })
 
     $locationProvider.html5Mode(true);
 });
