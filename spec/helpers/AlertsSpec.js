@@ -1,6 +1,6 @@
 beforeEach(angular.mock.module("app"))
 
-describe('FacebookHelper',function(){
+describe('AlertHelper',function(){
   var Alerts, AlertsFactory, scope, count;
   beforeEach(inject(function(_Alerts_,_AlertsFactory_){
     Alerts = _Alerts_;
