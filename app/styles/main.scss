@@ -7,8 +7,13 @@
 // from components
 @import "common";
 @import "home";
+@import "map";
 
-
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 body {
   background: $belinko-bg-gray;
 }

@@ -5826,5 +5826,18 @@ button.close {
     #home-page .jumbotron p {
       font-style: italic; }
 
+#map-page {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0; }
+  #map-page #map {
+    height: 100%; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0; }
+
 body {
   background: #f3f3f3; }

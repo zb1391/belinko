@@ -14,6 +14,10 @@ app.config(function($routeProvider,$locationProvider){
       templateUrl: 'partials/login.html',
       controller: 'LoginController',
     })
+    .when('/map',{
+      templateUrl: 'partials/map.html',
+      controller: 'MapController',
+    })
 
     $locationProvider.html5Mode(true);
 });
