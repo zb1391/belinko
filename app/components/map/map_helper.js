@@ -1,0 +1,55 @@
+var app = require('angular').module('app');
+var GoogleMapsLoader = require('google-maps');
+GoogleMapsLoader.KEY = "AIzaSyChK3PkjgLlhcgXNUZOiLeseQwyL45jyYk"
+
+app.service('MapHelper',['Alerts','$location',function(Alerts,$location){
+  var self = this;
+
+  /**
+   * builds options to render google maps
+   * @param {Object} position
+   * @return {Object} options
+   *
+   * position must have a coords object
+   * that has lat/lng keys
+   */
+  this.buildOptions = function(position){
+    var coords = position.coords;
+    var options = {
+      zoom: 15,
+      center: {
+        lat: coords.latitude,
+        lng: coords.longitude,
+      },
+    };
+
+    return options;
+  };
+
+  /**
+   * renders the Google Map
+   * @param {Object} $scope
+   * @param {Object} position
+   *
+   * position must have a coords object
+   * that has lat/lng keys
+   *
+   * sets $scope.map to the Google Map Object
+   */
+  this.loadMap = function($scope,position){
+    var el = document.getElementById('map');
+    var options = self.buildOptions(position);
+    GoogleMapsLoader.load(function(google){
+      $scope.map = new google.maps.Map(el,options);
+    });
+  };
+
+  /**
+   * handles google maps error geo locator
+   * flashes an error and redirects to my-account
+   */
+  this.loadMapError = function(){
+    Alerts.addAlert({ type: 'danger', msg:'Failed to load Google Maps'});
+    $location.url('/my-account');
+  };
+}]);
