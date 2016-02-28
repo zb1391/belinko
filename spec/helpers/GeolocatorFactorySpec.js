@@ -9,17 +9,6 @@ describe('GeolocatorFactory',function(){
   }));
 
   describe('getCurrentPosition',function(){
-    describe('when there is no geolocation',function(){
-      beforeEach(function(){
-        window.navigator.geolocation = false;
-      });
-
-      it('sets the error object',function(){
-        geoloc.getCurrentPosition();
-        expect(geoloc.errors.status).toEqual('Geolocation not supported');
-      });
-    });
-
     describe('when there is geolocation',function(){
       beforeEach(function(){
         window.navigator.geolocation = {};
@@ -36,26 +25,26 @@ describe('GeolocatorFactory',function(){
   });
 
   describe('resolve',function(){
+    var deferred = {resolve: function(position){}};
     beforeEach(function(){
-      geoloc.resolve({coords: {latitude: '123', longitude: '456'}});
+      spyOn(deferred,'resolve');
+      geoloc.resolve(deferred,{coords: {latitude: '123', longitude: '456'}});
     });
 
-    it('sets position.latitude',function(){
-      expect(geoloc.position.latitude).toEqual('123');
-    });
-
-    it('sets longitude',function(){
-      expect(geoloc.position.longitude).toEqual('456');
+    it('calls deferred.resolve',function(){
+      expect(deferred.resolve).toHaveBeenCalled();
     });
   });
 
   describe('reject',function(){
+    var deferred = {reject: function(error){}};
     beforeEach(function(){
-      geoloc.reject({code: '1', message: 'test'});
+      spyOn(deferred,'reject');
+      geoloc.reject(deferred,{code: '1', message: 'test'});
     });
 
-    it('sets errors[code]',function(){
-      expect(geoloc.errors['1']).toEqual('test');
+    it('sets deferred.reject',function(){
+      expect(deferred.reject).toHaveBeenCalled();
     });
   });
 });

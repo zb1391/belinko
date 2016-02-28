@@ -1,37 +1,27 @@
 var angular = require('angular');
 
-angular.module('app').factory('GeolocatorFactory', ['$window','$rootScope', function($window,$rootScope){
-  var Geolocator = function(){
-    this.position = {};
-    this.errors = {};
+angular.module('app').factory('GeolocatorFactory', ['$window','$rootScope', '$q', 
+function($window,$rootScope,$q){
+  var Geolocator = function(){};
+
+  Geolocator.prototype.resolve = function(deferred,position){
+    deferred.resolve(position);
   };
 
-  Geolocator.prototype.resolve = function(position){
-    var $this = this;
-    $rootScope.$apply(function(){
-      var coords = position.coords;
-
-      $this.position.latitude = coords.latitude;
-      $this.position.longitude = coords.longitude;
-    });
-  };
-
-  Geolocator.prototype.reject = function(err){
-    var $this = this;
-    $rootScope.$apply(function(){
-      $this.errors[err.code] = err.message;
-    });
+  Geolocator.prototype.reject = function(deferred,err){
+    deferred.reject(err);
   };
 
   Geolocator.prototype.getCurrentPosition = function(){
+    var deferred = $q.defer()
     var geo = $window.navigator.geolocation;
     if(!geo){
       var err = {code: 'status', message: 'Geolocation not supported'};
-      this.reject(err);
-      return;
+      this.reject(deferred,err);
+      return deferred.promise;
     }
-
-    geo.getCurrentPosition(this.resolve.bind(this), this.reject.bind(this));
+    geo.getCurrentPosition(this.resolve.bind(null,deferred), this.reject.bind(null,deferred));
+    return deferred.promise;
   };
 
   return Geolocator;
