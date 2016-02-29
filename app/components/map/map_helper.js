@@ -16,11 +16,13 @@ app.service('MapHelper',['Alerts','$location',function(Alerts,$location){
   this.buildOptions = function(position){
     var coords = position.coords;
     var options = {
-      zoom: 15,
+      zoom: 16,
       center: {
         lat: coords.latitude,
         lng: coords.longitude,
       },
+      styles: [{ featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }]}]
+
     };
 
     return options;
@@ -40,6 +42,7 @@ app.service('MapHelper',['Alerts','$location',function(Alerts,$location){
     var el = document.getElementById('map');
     var options = self.buildOptions(position);
     GoogleMapsLoader.load(function(google){
+      $scope.google = google;
       $scope.map = new google.maps.Map(el,options);
     });
   };

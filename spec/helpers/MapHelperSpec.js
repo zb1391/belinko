@@ -17,7 +17,7 @@ describe('MapHelper',function(){
     });
 
     it('sets zoom',function(){
-      expect(options.zoom).toEqual(15);
+      expect(options.zoom).toEqual(16);
     });
 
     it('sets center',function(){

@@ -92,12 +92,41 @@ app.controller('MapController',AuthenticatedController(MapController));
 function MapController($scope,$injector){
   var Geolocator = $injector.get('GeolocatorFactory');
   var MapHelper  = $injector.get('MapHelper');
+  var Api        = $injector.get('Api');
 
   var geo = new Geolocator();
-  geo.getCurrentPosition().then(
+  var promise = geo.getCurrentPosition();
+
+  // load the map
+  promise.then(
     MapHelper.loadMap.bind(null,$scope),
     MapHelper.loadMappError
   );
+
+  // get radar markers
+  // need a loading screen
+  // i think i should initially show only markers
+  // for places that have reviews
+  // then you can search for other places with a text bar
+  // i have refined the radius to be smaller
+  // but i would like it to be dynamic to the viewport of the map
+  // so if you are zoomed out, you have a larger radius
+  promise.then(function(position){
+    var options = {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+    };
+    Api.radarSearch(options).then(function(response){
+      _.forEach(response.data.places,function(place){
+        var marker = new $scope.google.maps.Marker({
+          position: place.geometry.location,
+          title: 'testing!',
+          label: 'PPP',
+        });
+        marker.setMap($scope.map);
+      });
+    });
+  });
 };
 
 },{"../../shared/controllers/authenticated_controller.js":10,"angular":23,"google-maps":406,"lodash":407}],6:[function(require,module,exports){
@@ -119,11 +148,13 @@ app.service('MapHelper',['Alerts','$location',function(Alerts,$location){
   this.buildOptions = function(position){
     var coords = position.coords;
     var options = {
-      zoom: 15,
+      zoom: 16,
       center: {
         lat: coords.latitude,
         lng: coords.longitude,
       },
+      styles: [{ featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }]}]
+
     };
 
     return options;
@@ -143,6 +174,7 @@ app.service('MapHelper',['Alerts','$location',function(Alerts,$location){
     var el = document.getElementById('map');
     var options = self.buildOptions(position);
     GoogleMapsLoader.load(function(google){
+      $scope.google = google;
       $scope.map = new google.maps.Map(el,options);
     });
   };
@@ -420,6 +452,51 @@ app.factory('Api', ['$http', '$resource','FacebookHelper','$q','auth',function($
            onLogin.bind(null,deferred),
            onLogout.bind(null,deferred));
       return deferred.promise;
+    },
+
+    /**
+     * perform a belinko nearby search
+     * @param {Object} options
+     * @return {Promise}
+     *
+     * options include
+     *   latitude  - lat coord
+     *   longitude - lng coord
+     *   radius - radius to search for
+     *   keyword
+     *   name
+     *   opennow - bool for open or closed
+     *   zagatselected - bool for zagat selected places
+     */
+    nearbySearch: function(options){
+      return $http({
+        url: apiBase + '/google_places/nearby_search',
+        method: 'GET',
+        params: options,
+      });
+    },
+
+    /**
+     * perform a belinko radar search
+     * @param {Object} options
+     * @return {Promise}
+     *
+     * options include
+     *   latitude - lat coord
+     *   longitude - lng coord
+     *   radius - radius to search for
+     *   types
+     *   keyword
+     *   name
+     *   opennow - bool for open or closed
+     *   zagatselected - bool for zagar selected places
+     */ 
+    radarSearch: function(options){
+      return $http({
+        url: apiBase + '/google_places/radar_search',
+        method: 'GET',
+        params: options
+      });
     },
   };
 
