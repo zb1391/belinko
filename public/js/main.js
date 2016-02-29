@@ -97,6 +97,8 @@ function MapController($scope,$injector){
   var geo = new Geolocator();
   var promise = geo.getCurrentPosition();
 
+  $scope.markers = [];
+
   // load the map
   promise.then(
     MapHelper.loadMap.bind(null,$scope),
@@ -120,10 +122,9 @@ function MapController($scope,$injector){
       _.forEach(response.data.places,function(place){
         var marker = new $scope.google.maps.Marker({
           position: place.geometry.location,
-          title: 'testing!',
-          label: 'PPP',
         });
         marker.setMap($scope.map);
+        $scope.markers.push(marker);
       });
     });
   });
