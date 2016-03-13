@@ -7,16 +7,19 @@ app.service('MarkerHelper',['GoogleMapFactory',function(GoogleMapFactory){
   /**
    * create a new Marker and add to Map
    * @param {Object} place
-   * @return {Marker} marker
+   * @return {Object} marker
    *
    * place is a response from the api
+   * the return object has a reference to a marker and the place
    */
   this.addMarker = function(place){
+    var marker = {};
     if(!self.isReady()) return;
-    var marker = new GoogleMapFactory.google.maps.Marker({
+    marker.marker = new GoogleMapFactory.google.maps.Marker({
       position: place.geometry.location,
     });
-    marker.setMap(GoogleMapFactory.map);
+    marker.marker.setMap(GoogleMapFactory.map);
+    marker.place = place;
     return marker;
   };
 
@@ -41,12 +44,12 @@ app.service('MarkerHelper',['GoogleMapFactory',function(GoogleMapFactory){
    */
   this.addListeners = function($scope,marker){
     var map = GoogleMapFactory.map;
-    marker.addListener('click', function(){
+    marker.marker.addListener('click', function(){
       $scope.$apply(function(){
         $scope.showDetail = true;
       });
       GoogleMapFactory.google.maps.event.trigger(map,'resize');
-      map.panTo(marker.getPosition());
+      map.panTo(marker.marker.getPosition());
     });
   };
 
