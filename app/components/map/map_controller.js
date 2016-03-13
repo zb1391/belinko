@@ -18,10 +18,7 @@ function MapController($scope,$injector){
   $scope.markers = [];
 
   // load the map
-  promise.then(
-    MapHelper.loadMap.bind(null,$scope),
-    MapHelper.loadMappError
-  );
+  promise.then(MapHelper.loadMap,MapHelper.loadMappError);
 
   // get radar markers
   // need a loading screen

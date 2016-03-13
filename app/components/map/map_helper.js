@@ -31,15 +31,13 @@ function(Alerts,$location,GoogleMapFactory){
 
   /**
    * renders the Google Map
-   * @param {Object} $scope
    * @param {Object} position
    *
    * position must have a coords object
    * that has lat/lng keys
    *
-   * sets $scope.map to the Google Map Object
    */
-  this.loadMap = function($scope,position){
+  this.loadMap = function(position){
     var el = document.getElementById('map');
     var options = self.buildOptions(position);
     GoogleMapsLoader.load(function(google){
