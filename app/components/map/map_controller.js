@@ -12,22 +12,14 @@ function MapController($scope,$injector){
   var Api          = $injector.get('Api');
   var MarkerHelper = $injector.get('MarkerHelper');
 
-  var geo = new Geolocator();
-  var promise = geo.getCurrentPosition();
+  var $scope.geo = new Geolocator();
+  var promise = $scope.geo.getCurrentPosition();
 
   $scope.markers = [];
 
   // load the map
   promise.then(MapHelper.loadMap,MapHelper.loadMappError);
 
-  // get radar markers
-  // need a loading screen
-  // i think i should initially show only markers
-  // for places that have reviews
-  // then you can search for other places with a text bar
-  // i have refined the radius to be smaller
-  // but i would like it to be dynamic to the viewport of the map
-  // so if you are zoomed out, you have a larger radius
   promise.then(function(position){
     var options = {
       latitude: position.coords.latitude,
