@@ -13,7 +13,7 @@ app.service('MarkerHelper',['GoogleMapFactory',function(GoogleMapFactory){
    * the return object has a reference to a marker and the place
    */
   this.addMarker = function(place){
-    var marker = {};
+    var marker = {}; 
     if(!self.isReady()) return;
     marker.marker = new GoogleMapFactory.google.maps.Marker({
       position: place.geometry.location,
@@ -32,7 +32,7 @@ app.service('MarkerHelper',['GoogleMapFactory',function(GoogleMapFactory){
    */
   this.isReady = function(){
     var factory = GoogleMapFactory;
-    return factory.google && factory.map;
+    return !!(factory.google && factory.map);
   };
 
   /**
