@@ -29,9 +29,15 @@ function MapController($scope,$injector){
     Api.radarSearch(options).then(function(response){
       _.forEach(response.data.places,function(place){
         var marker = MarkerHelper.addMarker(place);
-        MarkerHelper.addListeners($scope,marker);
+        MarkerHelper.onClick(marker,getDetail);
         $scope.markers.push(marker);      
       });
     });
   });
+
+  function getDetail(){
+    $scope.$apply(function(){
+      $scope.showDetail = true;
+    });
+  };
 };

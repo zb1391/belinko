@@ -120,11 +120,17 @@ function MapController($scope,$injector){
     Api.radarSearch(options).then(function(response){
       _.forEach(response.data.places,function(place){
         var marker = MarkerHelper.addMarker(place);
-        MarkerHelper.addListeners($scope,marker);
+        MarkerHelper.onClick(marker,getDetail);
         $scope.markers.push(marker);      
       });
     });
   });
+
+  function getDetail(){
+    $scope.$apply(function(){
+      $scope.showDetail = true;
+    });
+  };
 };
 
 },{"../../shared/controllers/authenticated_controller.js":12,"angular":25,"google-maps":139,"lodash":193}],7:[function(require,module,exports){
@@ -225,23 +231,20 @@ app.service('MarkerHelper',['GoogleMapFactory',function(GoogleMapFactory){
   };
 
   /**
-   * add the click listener to the marker
-   * @param {Object} $scope
-   * @param {Marker} marker
+   * add a click listener to a marker
+   * @param {Object} Marker
+   * @param {Function} clickFn
    *
-   * the click event right now just toggles showDetail
+   * on click trigger map resize and panTo position
    */
-  this.addListeners = function($scope,marker){
+  this.onClick = function(marker,clickFn){
     var map = GoogleMapFactory.map;
-    marker.marker.addListener('click', function(){
-      $scope.$apply(function(){
-        $scope.showDetail = true;
-      });
+    marker.marker.addListener('click',function(){
+      clickFn();
       GoogleMapFactory.google.maps.event.trigger(map,'resize');
       map.panTo(marker.marker.getPosition());
     });
   };
-
 }]);
 
 },{"angular":25,"lodash":193}],9:[function(require,module,exports){

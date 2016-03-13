@@ -36,21 +36,18 @@ app.service('MarkerHelper',['GoogleMapFactory',function(GoogleMapFactory){
   };
 
   /**
-   * add the click listener to the marker
-   * @param {Object} $scope
-   * @param {Marker} marker
+   * add a click listener to a marker
+   * @param {Object} Marker
+   * @param {Function} clickFn
    *
-   * the click event right now just toggles showDetail
+   * on click trigger map resize and panTo position
    */
-  this.addListeners = function($scope,marker){
+  this.onClick = function(marker,clickFn){
     var map = GoogleMapFactory.map;
-    marker.marker.addListener('click', function(){
-      $scope.$apply(function(){
-        $scope.showDetail = true;
-      });
+    marker.marker.addListener('click',function(){
+      clickFn();
       GoogleMapFactory.google.maps.event.trigger(map,'resize');
       map.panTo(marker.marker.getPosition());
     });
   };
-
 }]);
