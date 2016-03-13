@@ -35,6 +35,11 @@ function MapController($scope,$injector){
     });
   });
 
+  /**
+   * show the detail of the clicked marker
+   * the $apply is necessary because the click event
+   * is registered outside of the scope
+   */
   function getDetail(){
     $scope.$apply(function(){
       $scope.showDetail = true;
