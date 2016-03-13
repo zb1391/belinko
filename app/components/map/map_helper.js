@@ -2,7 +2,8 @@ var app = require('angular').module('app');
 var GoogleMapsLoader = require('google-maps');
 GoogleMapsLoader.KEY = "AIzaSyChK3PkjgLlhcgXNUZOiLeseQwyL45jyYk"
 
-app.service('MapHelper',['Alerts','$location',function(Alerts,$location){
+app.service('MapHelper',['Alerts','$location','GoogleMapFactory',
+function(Alerts,$location,GoogleMapFactory){
   var self = this;
 
   /**
@@ -42,8 +43,8 @@ app.service('MapHelper',['Alerts','$location',function(Alerts,$location){
     var el = document.getElementById('map');
     var options = self.buildOptions(position);
     GoogleMapsLoader.load(function(google){
-      $scope.google = google;
-      $scope.map = new google.maps.Map(el,options);
+      GoogleMapFactory.map = new google.maps.Map(el,options);
+      GoogleMapFactory.google = google;
     });
   };
 

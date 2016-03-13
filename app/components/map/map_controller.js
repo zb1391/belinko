@@ -7,9 +7,10 @@ GoogleMapsLoader.KEY = "AIzaSyChK3PkjgLlhcgXNUZOiLeseQwyL45jyYk"
 app.controller('MapController',AuthenticatedController(MapController));
 
 function MapController($scope,$injector){
-  var Geolocator = $injector.get('GeolocatorFactory');
-  var MapHelper  = $injector.get('MapHelper');
-  var Api        = $injector.get('Api');
+  var Geolocator   = $injector.get('GeolocatorFactory');
+  var MapHelper    = $injector.get('MapHelper');
+  var Api          = $injector.get('Api');
+  var MarkerHelper = $injector.get('MarkerHelper');
 
   var geo = new Geolocator();
   var promise = geo.getCurrentPosition();
@@ -37,10 +38,7 @@ function MapController($scope,$injector){
     };
     Api.radarSearch(options).then(function(response){
       _.forEach(response.data.places,function(place){
-        var marker = new $scope.google.maps.Marker({
-          position: place.geometry.location,
-        });
-        marker.setMap($scope.map);
+        var marker = MarkerHelper.addMarker(place);
         $scope.markers.push(marker);
       });
     });
