@@ -12,10 +12,11 @@ function MapController($scope,$injector){
   var Api          = $injector.get('Api');
   var MarkerHelper = $injector.get('MarkerHelper');
 
-  var $scope.geo = new Geolocator();
+  $scope.geo = new Geolocator();
   var promise = $scope.geo.getCurrentPosition();
 
   $scope.markers = [];
+  $scope.showDetail = false;
 
   // load the map
   promise.then(MapHelper.loadMap,MapHelper.loadMappError);
@@ -28,7 +29,8 @@ function MapController($scope,$injector){
     Api.radarSearch(options).then(function(response){
       _.forEach(response.data.places,function(place){
         var marker = MarkerHelper.addMarker(place);
-        $scope.markers.push(marker);
+        MarkerHelper.addListeners($scope,marker);
+        $scope.markers.push(marker);      
       });
     });
   });

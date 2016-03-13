@@ -103,22 +103,15 @@ function MapController($scope,$injector){
   var Api          = $injector.get('Api');
   var MarkerHelper = $injector.get('MarkerHelper');
 
-  var geo = new Geolocator();
-  var promise = geo.getCurrentPosition();
+  $scope.geo = new Geolocator();
+  var promise = $scope.geo.getCurrentPosition();
 
   $scope.markers = [];
+  $scope.showDetail = false;
 
   // load the map
   promise.then(MapHelper.loadMap,MapHelper.loadMappError);
 
-  // get radar markers
-  // need a loading screen
-  // i think i should initially show only markers
-  // for places that have reviews
-  // then you can search for other places with a text bar
-  // i have refined the radius to be smaller
-  // but i would like it to be dynamic to the viewport of the map
-  // so if you are zoomed out, you have a larger radius
   promise.then(function(position){
     var options = {
       latitude: position.coords.latitude,
@@ -127,7 +120,8 @@ function MapController($scope,$injector){
     Api.radarSearch(options).then(function(response){
       _.forEach(response.data.places,function(place){
         var marker = MarkerHelper.addMarker(place);
-        $scope.markers.push(marker);
+        MarkerHelper.addListeners($scope,marker);
+        $scope.markers.push(marker);      
       });
     });
   });
@@ -225,6 +219,21 @@ app.service('MarkerHelper',['GoogleMapFactory',function(GoogleMapFactory){
   this.isReady = function(){
     var factory = GoogleMapFactory;
     return factory.google && factory.map;
+  };
+
+  /**
+   * add the click listener to the marker
+   * the click event right now just toggles showDetail
+   */
+  this.addListeners = function($scope,marker){
+    var map = GoogleMapFactory.map;
+    marker.addListener('click', function(){
+      $scope.$apply(function(){
+        $scope.showDetail = true;
+      });
+      GoogleMapFactory.google.maps.event.trigger(map,'resize');
+      map.panTo(marker.getPosition());
+    });
   };
 
 }]);
