@@ -1,10 +1,10 @@
 beforeEach(angular.mock.module("app"));
 var GoogleMapsLoader = require('google-maps');
 
-describe('MapHelper',function(){
-  var MapHelper, Alerts, location;
-  beforeEach(inject(function(_MapHelper_,_Alerts_,$location){ 
-    MapHelper = _MapHelper_;
+describe('MapLoader',function(){
+  var MapLoader, Alerts, location;
+  beforeEach(inject(function(_MapLoader_,_Alerts_,$location){ 
+    MapLoader = _MapLoader_;
     Alerts = _Alerts_;
     location = $location;
   }));
@@ -13,7 +13,7 @@ describe('MapHelper',function(){
     var position = { coords: {latitude: '123', longitude: '456'} };
     var options;
     beforeEach(function(){
-      options = MapHelper.buildOptions(position);      
+      options = MapLoader.buildOptions(position);      
     });
 
     it('sets zoom',function(){

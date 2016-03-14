@@ -99,7 +99,7 @@ app.controller('MapController',AuthenticatedController(MapController));
 
 function MapController($scope,$injector){
   var Geolocator   = $injector.get('GeolocatorFactory');
-  var MapHelper    = $injector.get('MapHelper');
+  var MapLoader    = $injector.get('MapLoader');
   var Api          = $injector.get('Api');
   var MarkerHelper = $injector.get('MarkerHelper');
 
@@ -110,7 +110,7 @@ function MapController($scope,$injector){
   $scope.showDetail = false;
 
   // load the map
-  promise.then(MapHelper.loadMap,MapHelper.loadMappError);
+  promise.then(MapLoader.loadMap,MapLoader.loadMappError);
 
   promise.then(function(position){
     var options = {
@@ -126,10 +126,16 @@ function MapController($scope,$injector){
     });
   });
 
-  function getDetail(){
+  /**
+   * show the detail of the clicked marker
+   * the $apply is necessary because the click event
+   * is registered outside of the scope
+   */
+  function getDetail(marker){
     $scope.$apply(function(){
       $scope.showDetail = true;
     });
+    Api.getDetail(marker.place.place_id);
   };
 };
 
@@ -138,7 +144,7 @@ var app = require('angular').module('app');
 var GoogleMapsLoader = require('google-maps');
 GoogleMapsLoader.KEY = "AIzaSyChK3PkjgLlhcgXNUZOiLeseQwyL45jyYk"
 
-app.service('MapHelper',['Alerts','$location','GoogleMapFactory',
+app.service('MapLoader',['Alerts','$location','GoogleMapFactory',
 function(Alerts,$location,GoogleMapFactory){
   var self = this;
 
@@ -240,7 +246,7 @@ app.service('MarkerHelper',['GoogleMapFactory',function(GoogleMapFactory){
   this.onClick = function(marker,clickFn){
     var map = GoogleMapFactory.map;
     marker.marker.addListener('click',function(){
-      clickFn();
+      clickFn(marker);
       GoogleMapFactory.google.maps.event.trigger(map,'resize');
       map.panTo(marker.marker.getPosition());
     });
@@ -272,9 +278,9 @@ require('./routes.js');
 
 
 require('./shared/controllers/authenticated_controller.js');require('./shared/factories/AlertsFactory.js');require('./shared/factories/GeolocatorFactory.js');require('./shared/services/FacebookHelper.js');require('./shared/services/alerts.js');require('./shared/services/api.js');require('./shared/services/auth.js');
-require('./components/alerts/alerts_controller.js');require('./components/home/home_controller.js');require('./components/login/LoginHelper.js');require('./components/login/login_controller.js');require('./components/map/GoogleMapFactory.js');require('./components/map/map_controller.js');require('./components/map/map_helper.js');require('./components/map/marker_helper.js');require('./components/my_account/my_account_controller.js');
+require('./components/alerts/alerts_controller.js');require('./components/home/home_controller.js');require('./components/login/LoginHelper.js');require('./components/login/login_controller.js');require('./components/map/GoogleMapFactory.js');require('./components/map/map_controller.js');require('./components/map/map_loader.js');require('./components/map/marker_helper.js');require('./components/my_account/my_account_controller.js');
 
-},{"./components/alerts/alerts_controller.js":1,"./components/home/home_controller.js":2,"./components/login/LoginHelper.js":3,"./components/login/login_controller.js":4,"./components/map/GoogleMapFactory.js":5,"./components/map/map_controller.js":6,"./components/map/map_helper.js":7,"./components/map/marker_helper.js":8,"./components/my_account/my_account_controller.js":9,"./routes.js":11,"./shared/controllers/authenticated_controller.js":12,"./shared/factories/AlertsFactory.js":13,"./shared/factories/GeolocatorFactory.js":14,"./shared/services/FacebookHelper.js":15,"./shared/services/alerts.js":16,"./shared/services/api.js":17,"./shared/services/auth.js":18,"angular":25,"angular-bootstrap-npm":19,"angular-resource":21,"angular-route":23}],11:[function(require,module,exports){
+},{"./components/alerts/alerts_controller.js":1,"./components/home/home_controller.js":2,"./components/login/LoginHelper.js":3,"./components/login/login_controller.js":4,"./components/map/GoogleMapFactory.js":5,"./components/map/map_controller.js":6,"./components/map/map_loader.js":7,"./components/map/marker_helper.js":8,"./components/my_account/my_account_controller.js":9,"./routes.js":11,"./shared/controllers/authenticated_controller.js":12,"./shared/factories/AlertsFactory.js":13,"./shared/factories/GeolocatorFactory.js":14,"./shared/services/FacebookHelper.js":15,"./shared/services/alerts.js":16,"./shared/services/api.js":17,"./shared/services/auth.js":18,"angular":25,"angular-bootstrap-npm":19,"angular-resource":21,"angular-route":23}],11:[function(require,module,exports){
 var app = require('angular').module('app');
 
 app.config(function($routeProvider,$locationProvider){
@@ -556,7 +562,20 @@ app.factory('Api', ['$http', '$resource','FacebookHelper','$q','auth',function($
         params: options
       });
     },
+
+    /**
+     * get a place detail
+     * @param {Integer} id
+     */
+    placeDetail: function(id){
+      return $http({
+        url: apiBase + '/google_places/detail',
+        method: 'GET',
+        params: { id: id }
+      });
+    },
   };
+
 
   /**
    * save the user credentials on login success

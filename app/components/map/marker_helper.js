@@ -45,7 +45,7 @@ app.service('MarkerHelper',['GoogleMapFactory',function(GoogleMapFactory){
   this.onClick = function(marker,clickFn){
     var map = GoogleMapFactory.map;
     marker.marker.addListener('click',function(){
-      clickFn();
+      clickFn(marker);
       GoogleMapFactory.google.maps.event.trigger(map,'resize');
       map.panTo(marker.marker.getPosition());
     });

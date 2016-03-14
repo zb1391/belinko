@@ -8,7 +8,7 @@ app.controller('MapController',AuthenticatedController(MapController));
 
 function MapController($scope,$injector){
   var Geolocator   = $injector.get('GeolocatorFactory');
-  var MapHelper    = $injector.get('MapHelper');
+  var MapLoader    = $injector.get('MapLoader');
   var Api          = $injector.get('Api');
   var MarkerHelper = $injector.get('MarkerHelper');
 
@@ -19,7 +19,7 @@ function MapController($scope,$injector){
   $scope.showDetail = false;
 
   // load the map
-  promise.then(MapHelper.loadMap,MapHelper.loadMappError);
+  promise.then(MapLoader.loadMap,MapLoader.loadMappError);
 
   promise.then(function(position){
     var options = {
@@ -40,9 +40,10 @@ function MapController($scope,$injector){
    * the $apply is necessary because the click event
    * is registered outside of the scope
    */
-  function getDetail(){
+  function getDetail(marker){
     $scope.$apply(function(){
       $scope.showDetail = true;
     });
+    Api.getDetail(marker.place.place_id);
   };
 };

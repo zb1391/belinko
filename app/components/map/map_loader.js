@@ -2,7 +2,7 @@ var app = require('angular').module('app');
 var GoogleMapsLoader = require('google-maps');
 GoogleMapsLoader.KEY = "AIzaSyChK3PkjgLlhcgXNUZOiLeseQwyL45jyYk"
 
-app.service('MapHelper',['Alerts','$location','GoogleMapFactory',
+app.service('MapLoader',['Alerts','$location','GoogleMapFactory',
 function(Alerts,$location,GoogleMapFactory){
   var self = this;
 
