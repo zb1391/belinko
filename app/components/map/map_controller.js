@@ -11,6 +11,7 @@ function MapController($scope,$injector){
   var MapLoader    = $injector.get('MapLoader');
   var Api          = $injector.get('Api');
   var MarkerHelper = $injector.get('MarkerHelper');
+  var MapHelper    = $injector.get('MapHelper');
 
   $scope.geo = new Geolocator();
   var promise = $scope.geo.getCurrentPosition();
@@ -29,21 +30,9 @@ function MapController($scope,$injector){
     Api.radarSearch(options).then(function(response){
       _.forEach(response.data.places,function(place){
         var marker = MarkerHelper.addMarker(place);
-        MarkerHelper.onClick(marker,getDetail);
-        $scope.markers.push(marker);      
+        MarkerHelper.onClick(marker,MapHelper.getDetail.bind(null,$scope));
+        $scope.markers.push(marker);
       });
     });
   });
-
-  /**
-   * show the detail of the clicked marker
-   * the $apply is necessary because the click event
-   * is registered outside of the scope
-   */
-  function getDetail(marker){
-    $scope.$apply(function(){
-      $scope.showDetail = true;
-    });
-    Api.getDetail(marker.place.place_id);
-  };
 };
