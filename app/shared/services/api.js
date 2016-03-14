@@ -64,7 +64,20 @@ app.factory('Api', ['$http', '$resource','FacebookHelper','$q','auth',function($
         params: options
       });
     },
+
+    /**
+     * get a place detail
+     * @param {Integer} id
+     */
+    placeDetail: function(id){
+      return $http({
+        url: apiBase + '/google_places/detail',
+        method: 'GET',
+        params: { id: id }
+      });
+    },
   };
+
 
   /**
    * save the user credentials on login success
