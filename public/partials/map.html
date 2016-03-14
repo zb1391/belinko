@@ -1,6 +1,10 @@
 <div id="map-page">
   <div id="map" ng-class="{'half-width': showDetail}"></div>
   <div id="location-detail" ng-class="{'half-width': showDetail}">
-    <h1>My Detail</h1>
+    <div ng-show="place">
+      <img src="{{place.icon}}" />
+      <h2>{{place.name}}</h2>
+      <h3>{{place.formatted_address}}</h3>
+    </div>
   </div>
 </div>

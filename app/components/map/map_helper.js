@@ -18,7 +18,9 @@ app.service('MapHelper',['Api',function(Api){
     $scope.$apply(function(){
       $scope.showDetail = true;
     });
-    Api.placeDetail(marker.place.place_id);
+    Api.placeDetail(marker.place.place_id).then(function(resp){
+      $scope.place = resp.data.place;
+    });
   };
 
 }]);
