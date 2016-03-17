@@ -5831,6 +5831,8 @@ button.close {
   width: 100%;
   margin: 0;
   padding: 0; }
+  #map-page i {
+    display: block; }
   #map-page #map {
     width: 100%;
     height: 100%; }
