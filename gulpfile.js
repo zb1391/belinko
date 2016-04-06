@@ -37,6 +37,7 @@ gulp.task('sass', function() {
 gulp.task('watch', function() {
     // recompile main.js
     gulp.watch('app/**/*.js', ['browserify'])
+    gulp.watch('public/directives/*.html',['browserify'])
    
     // when main changes retest
     gulp.watch('spec/**/*.js',['test'])

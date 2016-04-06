@@ -27,7 +27,7 @@ function MapController($scope,$injector){
       latitude: position.coords.latitude,
       longitude: position.coords.longitude,
     };
-    Api.radarSearch(options).then(function(response){
+    Api.nearbySearch(options).then(function(response){
       _.forEach(response.data.places,function(place){
         var marker = MarkerHelper.addMarker(place);
         MarkerHelper.onClick(marker,MapHelper.getDetail.bind(null,$scope));

@@ -118,7 +118,7 @@ function MapController($scope,$injector){
       latitude: position.coords.latitude,
       longitude: position.coords.longitude,
     };
-    Api.radarSearch(options).then(function(response){
+    Api.nearbySearch(options).then(function(response){
       _.forEach(response.data.places,function(place){
         var marker = MarkerHelper.addMarker(place);
         MarkerHelper.onClick(marker,MapHelper.getDetail.bind(null,$scope));
@@ -128,7 +128,7 @@ function MapController($scope,$injector){
   });
 };
 
-},{"../../shared/controllers/authenticated_controller.js":13,"angular":27,"google-maps":141,"lodash":195}],7:[function(require,module,exports){
+},{"../../shared/controllers/authenticated_controller.js":14,"angular":27,"google-maps":141,"lodash":195}],7:[function(require,module,exports){
 var app = require('angular').module('app');
 
 app.service('MapHelper',['Api',function(Api){
@@ -280,7 +280,25 @@ function MyAccountController($scope,$injector){
   debugger;
 };
 
-},{"../../shared/controllers/authenticated_controller.js":13,"angular":27}],11:[function(require,module,exports){
+},{"../../shared/controllers/authenticated_controller.js":14,"angular":27}],11:[function(require,module,exports){
+var app = require('angular').module('app');
+
+
+var templateHTML = "<div>\n  <img src=\"{{place.icon}}\" />\n  <h2>{{place.name}}</h2>\n  <h3>{{place.formatted_address}}</h3>\n  <i>{{place.formatted_address}}</i>\n  <i>{{place.formatted_phone_number}}</i>\n  <button class=\"btn btn-belinko-purple\">Add Review</button>\n</div>\n";
+app.directive('placeDetail', function(){
+  return {
+    restrict: 'E',
+    template: templateHTML,
+    scope: {
+        place: '=?',
+    },
+    link: function(scope, element, attrs) {
+console.log('test');
+    },
+  };
+});
+
+},{"angular":27}],12:[function(require,module,exports){
 require('angular')
 require('angular-bootstrap-npm')
 
@@ -294,10 +312,10 @@ var app = angular.module('app', [
 require('./routes.js');
 
 
-require('./shared/controllers/authenticated_controller.js');require('./shared/factories/AlertsFactory.js');require('./shared/factories/GeolocatorFactory.js');require('./shared/services/FacebookHelper.js');require('./shared/services/alerts.js');require('./shared/services/api.js');require('./shared/services/auth.js');require('./shared/services/label_helper.js');
-require('./components/alerts/alerts_controller.js');require('./components/home/home_controller.js');require('./components/login/LoginHelper.js');require('./components/login/login_controller.js');require('./components/map/GoogleMapFactory.js');require('./components/map/map_controller.js');require('./components/map/map_helper.js');require('./components/map/map_loader.js');require('./components/map/marker_helper.js');require('./components/my_account/my_account_controller.js');
+require('./shared/controllers/authenticated_controller.js');require('./shared/factories/AlertsFactory.js');require('./shared/factories/GeolocatorFactory.js');require('./shared/services/FacebookHelper.js');require('./shared/services/alerts.js');require('./shared/services/api.js');require('./shared/services/auth.js');
+require('./components/alerts/alerts_controller.js');require('./components/home/home_controller.js');require('./components/login/LoginHelper.js');require('./components/login/login_controller.js');require('./components/map/GoogleMapFactory.js');require('./components/map/map_controller.js');require('./components/map/map_helper.js');require('./components/map/map_loader.js');require('./components/map/marker_helper.js');require('./components/my_account/my_account_controller.js');require('./components/place_detail/place_detail_directive.js');
 
-},{"./components/alerts/alerts_controller.js":1,"./components/home/home_controller.js":2,"./components/login/LoginHelper.js":3,"./components/login/login_controller.js":4,"./components/map/GoogleMapFactory.js":5,"./components/map/map_controller.js":6,"./components/map/map_helper.js":7,"./components/map/map_loader.js":8,"./components/map/marker_helper.js":9,"./components/my_account/my_account_controller.js":10,"./routes.js":12,"./shared/controllers/authenticated_controller.js":13,"./shared/factories/AlertsFactory.js":14,"./shared/factories/GeolocatorFactory.js":15,"./shared/services/FacebookHelper.js":16,"./shared/services/alerts.js":17,"./shared/services/api.js":18,"./shared/services/auth.js":19,"./shared/services/label_helper.js":20,"angular":27,"angular-bootstrap-npm":21,"angular-resource":23,"angular-route":25}],12:[function(require,module,exports){
+},{"./components/alerts/alerts_controller.js":1,"./components/home/home_controller.js":2,"./components/login/LoginHelper.js":3,"./components/login/login_controller.js":4,"./components/map/GoogleMapFactory.js":5,"./components/map/map_controller.js":6,"./components/map/map_helper.js":7,"./components/map/map_loader.js":8,"./components/map/marker_helper.js":9,"./components/my_account/my_account_controller.js":10,"./components/place_detail/place_detail_directive.js":11,"./routes.js":13,"./shared/controllers/authenticated_controller.js":14,"./shared/factories/AlertsFactory.js":15,"./shared/factories/GeolocatorFactory.js":16,"./shared/services/FacebookHelper.js":17,"./shared/services/alerts.js":18,"./shared/services/api.js":19,"./shared/services/auth.js":20,"angular":27,"angular-bootstrap-npm":21,"angular-resource":23,"angular-route":25}],13:[function(require,module,exports){
 var app = require('angular').module('app');
 
 app.config(function($routeProvider,$locationProvider){
@@ -322,7 +340,7 @@ app.config(function($routeProvider,$locationProvider){
     $locationProvider.html5Mode(true);
 });
 
-},{"angular":27}],13:[function(require,module,exports){
+},{"angular":27}],14:[function(require,module,exports){
 /**
  * creates a controller function
  * @param {Function} controllerCallback
@@ -352,7 +370,7 @@ var AuthenticatedController = function(controllerCallback){
 
 module.exports = AuthenticatedController;
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 var angular = require('angular');
 angular.module('app').factory('AlertsFactory', [function(){
   var alerts = [];
@@ -360,7 +378,7 @@ angular.module('app').factory('AlertsFactory', [function(){
   return alerts;
 }]);
 
-},{"angular":27}],15:[function(require,module,exports){
+},{"angular":27}],16:[function(require,module,exports){
 var angular = require('angular');
 
 angular.module('app').factory('GeolocatorFactory', ['$window','$rootScope', '$q', 
@@ -390,7 +408,7 @@ function($window,$rootScope,$q){
   return Geolocator;
 }]);
 
-},{"angular":27}],16:[function(require,module,exports){
+},{"angular":27}],17:[function(require,module,exports){
 var app = require('angular').module('app');
 var FB = require('fb');
 var _ = require('lodash');
@@ -476,7 +494,7 @@ function($location,$q){
 
 }]);
 
-},{"angular":27,"fb":135,"lodash":195}],17:[function(require,module,exports){
+},{"angular":27,"fb":135,"lodash":195}],18:[function(require,module,exports){
 var app = require('angular').module('app');
 
 app.service('Alerts',['AlertsFactory',function(AlertsFactory){
@@ -512,7 +530,7 @@ app.service('Alerts',['AlertsFactory',function(AlertsFactory){
   };
 }]);
 
-},{"angular":27}],18:[function(require,module,exports){
+},{"angular":27}],19:[function(require,module,exports){
 var app = require('angular').module('app');
 var _ = require('lodash');
 
@@ -638,7 +656,7 @@ app.config(['$resourceProvider', '$httpProvider', function($resourceProvider, $h
   }]);
 }]);
 
-},{"angular":27,"lodash":195}],19:[function(require,module,exports){
+},{"angular":27,"lodash":195}],20:[function(require,module,exports){
 var _ = require('lodash');
 var app = require('angular').module('app');
 
@@ -692,63 +710,7 @@ app.factory('auth', [
   }
 ]);
 
-},{"angular":27,"lodash":195}],20:[function(require,module,exports){
-// Define the overlay, derived from google.maps.OverlayView
-function Label(opt_options) {
- // Initialization
- this.setValues(opt_options);
-
- // Label specific
- var span = this.span_ = document.createElement('span');
- span.style.cssText = 'position: relative; left: -50%; top: -8px; ' +
-                      'white-space: nowrap; border: 1px solid blue; ' +
-                      'padding: 2px; background-color: white';
-
- var div = this.div_ = document.createElement('div');
- div.appendChild(span);
- div.style.cssText = 'position: absolute; display: none';
-};
-Label.prototype = new google.maps.OverlayView;
-
-// Implement onAdd
-Label.prototype.onAdd = function() {
- var pane = this.getPanes().overlayLayer;
- pane.appendChild(this.div_);
-
- // Ensures the label is redrawn if the text or position is changed.
- var me = this;
- this.listeners_ = [
-   google.maps.event.addListener(this, 'position_changed',
-       function() { me.draw(); }),
-   google.maps.event.addListener(this, 'text_changed',
-       function() { me.draw(); })
- ];
-};
-
-// Implement onRemove
-Label.prototype.onRemove = function() {
- this.div_.parentNode.removeChild(this.div_);
-
- // Label is removed from the map, stop updating its position/text.
- for (var i = 0, I = this.listeners_.length; i < I; ++i) {
-   google.maps.event.removeListener(this.listeners_[i]);
- }
-};
-
-// Implement draw
-Label.prototype.draw = function() {
- var projection = this.getProjection();
- var position = projection.fromLatLngToDivPixel(this.get('position'));
-
- var div = this.div_;
- div.style.left = position.x + 'px';
- div.style.top = position.y + 'px';
- div.style.display = 'block';
-
- this.span_.innerHTML = this.get('text').toString();
-};
-
-},{}],21:[function(require,module,exports){
+},{"angular":27,"lodash":195}],21:[function(require,module,exports){
 /*
  * angular-ui-bootstrap
  * http://angular-ui.github.io/bootstrap/
@@ -117138,4 +117100,4 @@ function Node (value, prev, next, list) {
   }
 }
 
-},{}]},{},[11]);
+},{}]},{},[12]);
