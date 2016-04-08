@@ -18,8 +18,8 @@ describe("placeDetail",function(){
     expect(isolate.showForm).toEqual(false);
   });
 
-  it('initializes scope.review to {}',function(){
-    expect(isolate.review).toEqual({});
+  it('initializes scope.review',function(){
+    expect(isolate.review).toEqual({ would_recommend: true });
   });
 
   describe('when place.place_id changes',function(){
@@ -31,7 +31,7 @@ describe("placeDetail",function(){
     });
 
     it('resets the review object',function(){
-      expect(isolate.review).toEqual({});
+      expect(isolate.review).toEqual({ would_recommend: true });
     });
 
     it('sets showForm to false',function(){

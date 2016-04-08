@@ -5843,11 +5843,38 @@ button.close {
     width: 50%;
     height: 100%;
     left: 50%; }
+    #map-page #location-detail .location-content {
+      height: 100%;
+      overflow-y: scroll;
+      background-color: white; }
+      #map-page #location-detail .location-content .location-header {
+        background-color: #5E35B1;
+        padding: 10px 0;
+        text-align: center;
+        color: white; }
+        #map-page #location-detail .location-content .location-header .btn {
+          margin-top: 10px;
+          margin-bottom: 5px; }
+        #map-page #location-detail .location-content .location-header img {
+          background-color: white;
+          width: 40px;
+          height: 40px;
+          padding: 2px;
+          border: 1px solid white;
+          border-radius: 50%; }
+      #map-page #location-detail .location-content .reviews {
+        padding: 5px 15px; }
   #map-page .half-width {
     width: 50% !important;
     display: inline-block !important; }
   #map-page #place-form {
     padding: 10px 15px; }
+    #map-page #place-form .btn-group .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px; }
+    #map-page #place-form .btn-group .active {
+      background-color: #5E35B1;
+      color: white; }
 
 html, body {
   height: 100%;

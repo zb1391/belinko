@@ -10,7 +10,9 @@ app.service('PlaceDetailHelper',[function(){
   this.reset = function($scope){
     return function(newValue,oldValue){
       if(newValue !== oldValue){
-        $scope.review = {};
+        $scope.review = {
+          would_recommend: true
+        };
         $scope.showForm = false;
         $scope.belinkoHeading = self.belinkoHeading($scope.place);
         $scope.googleHeading = self.googleHeading($scope.place);

@@ -16,7 +16,9 @@ app.directive('placeDetail', ['PlaceDetailHelper',function(PlaceDetailHelper){
 function link(helper){
   return function($scope,elem,attrs){
     $scope.showForm = false;
-    $scope.review = {};
+    $scope.review = {
+      would_recommend: true,
+    };
     $scope.belinkoHeading = "";
     $scope.googleHeading = "";
 
