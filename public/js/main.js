@@ -284,19 +284,34 @@ function MyAccountController($scope,$injector){
 var app = require('angular').module('app');
 
 
-var templateHTML = "<div>\n  <img src=\"{{place.icon}}\" />\n  <h2>{{place.name}}</h2>\n  <h3>{{place.formatted_address}}</h3>\n  <i>{{place.formatted_address}}</i>\n  <i>{{place.formatted_phone_number}}</i>\n  <button class=\"btn btn-belinko-purple\">Add Review</button>\n</div>\n";
+var templateHTML = "<div>\n  <img src=\"{{place.icon}}\" />\n  <h2>{{place.name}}</h2>\n  <h3>{{place.formatted_address}}</h3>\n  <i>{{place.formatted_address}}</i>\n  <i>{{place.formatted_phone_number}}</i>\n  <button class=\"btn btn-belinko-purple\" \n          ng-click=\"showForm = true\">Add Review</button>\n  <form id=\"place-form\" ng-show=\"showForm\" ng-submit=\"submitReview()\">\n    <div class=\"form-group\">\n      <label>Comment</label>\n      <textarea ng-model=\"review.comment\"\n                ng-required=\"true\"\n                class=\"form-control\"></textarea>\n    </div>\n    <input class=\"btn btn-primary\" type=\"submit\" />\n    <a href=\"#\" ng-click=\"showForm = false\">hide</a>\n  </form>\n</div>\n";
 app.directive('placeDetail', function(){
   return {
     restrict: 'E',
     template: templateHTML,
     scope: {
-        place: '=?',
+        place: '=',
     },
-    link: function(scope, element, attrs) {
-console.log('test');
-    },
+    link: link(),
   };
 });
+
+function link($scope,elem,attrs){
+  return function($scope,elem,attrs){
+    $scope.showForm = false;
+    $scope.review = {};
+
+    /*
+     * clear out the review when the place changes
+     */
+    $scope.$watch('place.place_id',function(newValue,oldValue){
+      if(newValue !== oldValue){
+        $scope.review = {};
+        $scope.showForm = false;
+      }
+    });
+  };
+};
 
 },{"angular":27}],12:[function(require,module,exports){
 require('angular')

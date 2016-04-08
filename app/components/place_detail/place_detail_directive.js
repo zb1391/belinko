@@ -7,10 +7,25 @@ app.directive('placeDetail', function(){
     restrict: 'E',
     template: templateHTML,
     scope: {
-        place: '=?',
+        place: '=',
     },
-    link: function(scope, element, attrs) {
-console.log('test');
-    },
+    link: link(),
   };
 });
+
+function link($scope,elem,attrs){
+  return function($scope,elem,attrs){
+    $scope.showForm = false;
+    $scope.review = {};
+
+    /*
+     * clear out the review when the place changes
+     */
+    $scope.$watch('place.place_id',function(newValue,oldValue){
+      if(newValue !== oldValue){
+        $scope.review = {};
+        $scope.showForm = false;
+      }
+    });
+  };
+};

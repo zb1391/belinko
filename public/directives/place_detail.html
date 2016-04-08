@@ -4,5 +4,16 @@
   <h3>{{place.formatted_address}}</h3>
   <i>{{place.formatted_address}}</i>
   <i>{{place.formatted_phone_number}}</i>
-  <button class="btn btn-belinko-purple">Add Review</button>
+  <button class="btn btn-belinko-purple" 
+          ng-click="showForm = true">Add Review</button>
+  <form id="place-form" ng-show="showForm" ng-submit="submitReview()">
+    <div class="form-group">
+      <label>Comment</label>
+      <textarea ng-model="review.comment"
+                ng-required="true"
+                class="form-control"></textarea>
+    </div>
+    <input class="btn btn-primary" type="submit" />
+    <a href="#" ng-click="showForm = false">hide</a>
+  </form>
 </div>

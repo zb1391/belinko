@@ -5846,6 +5846,8 @@ button.close {
   #map-page .half-width {
     width: 50% !important;
     display: inline-block !important; }
+  #map-page #place-form {
+    padding: 10px 15px; }
 
 html, body {
   height: 100%;
