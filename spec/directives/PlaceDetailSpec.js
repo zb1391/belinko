@@ -37,5 +37,15 @@ describe("placeDetail",function(){
     it('sets showForm to false',function(){
       expect(isolate.showForm).toEqual(false);
     });
+
+    it('sets the belinkoHeading',function(){
+      var expected = "Belinko Reviews (0)";
+      expect(isolate.belinkoHeading).toEqual(expected);
+    });
+
+    it('sets the googleHeading',function(){
+      var expected = "Google Reviews (0)";
+      expect(isolate.googleHeading).toEqual(expected);
+    });
   });
 });
