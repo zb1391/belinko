@@ -19,7 +19,7 @@ function link($scope,elem,attrs){
     $scope.review = {};
 
     /*
-     * clear out the review when the place changes
+     * reset the directive when the place changes
      */
     $scope.$watch('place.place_id',function(newValue,oldValue){
       if(newValue !== oldValue){
