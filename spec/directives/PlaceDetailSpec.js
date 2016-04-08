@@ -7,7 +7,7 @@ describe("placeDetail",function(){
   var element, scope, isolate;
 
   beforeEach(inject(function($rootScope, $compile){
-    place = {};
+    place = {reviews: [],belinko_reviews: []};
     scope = $rootScope.$new();
     scope.place = place;
     element = getCompiledElement(angular,$compile,scope,elem);
