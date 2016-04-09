@@ -35,6 +35,7 @@ app.service('LoginHelper',['$location','Alerts',function($location,Alerts){
   this.loginSuccess = function(response){
     $location.url('/my-account');
     response = response || {};
+debugger;
     var data = response.data || {};
     var msg = "Welcome to Belinko";
     if(data.name){
@@ -331,19 +332,20 @@ function link(){
 var app = require('angular').module('app');
 
 
-var templateHTML = "<div class=\"location-content\">\n  <div class=\"location-header\">\n    <img src=\"{{place.icon}}\" />\n    <h2>{{place.name}}</h2>\n    <i>{{place.formatted_address}}</i>\n    <i>{{place.formatted_phone_number}}</i>\n    <button class=\"btn btn-belinko-purple\" \n            ng-click=\"config.showForm = true\">Add Review</button>\n  </div>\n  <form id=\"place-form\" ng-show=\"config.showForm\" ng-submit=\"submitReview()\">\n    <div class=\"form-group\">\n      <div class=\"btn-group\">\n        <div><strong>I would recommend this place</strong></div>\n        <label class=\"btn btn-default\" ng-model=\"review.would_recommend\" uib-btn-radio=\"true\">Yes</label>\n        <label class=\"btn btn-default\" ng-model=\"review.would_recommend\" uib-btn-radio=\"false\">No</label>\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <label>Comment</label>\n      <textarea ng-model=\"review.comment\"\n                ng-required=\"true\"\n                class=\"form-control\"></textarea>\n    </div>\n    <input class=\"btn btn-primary\" type=\"submit\" />\n    <a href=\"#\" ng-click=\"config.showForm = false\">hide</a>\n  </form>\n  <uib-tabset active=\"active\">\n    <uib-tab index=\"0\" heading=\"{{belinkoHeading}}\">\n      <belinko-reviews show-form=\"config.showForm\" reviews=\"place.belinko_reviews\"></belinko-reviews>\n    </uib-tab>\n    <uib-tab index=\"1\" heading=\"{{googleHeading}}\">\n      <google-reviews reviews=\"place.reviews\"></google-reviews>\n    </uib-tab>\n  </uib-tabset>\n</div>\n";
-app.directive('placeDetail', ['PlaceDetailHelper',function(PlaceDetailHelper){
+var templateHTML = "<div class=\"location-content\">\n  <div class=\"location-header\">\n    <img src=\"{{place.icon}}\" />\n    <h2>{{place.name}}</h2>\n    <i>{{place.formatted_address}}</i>\n    <i>{{place.formatted_phone_number}}</i>\n    <button class=\"btn btn-belinko-purple\" \n            ng-click=\"config.showForm = true\">Add Review</button>\n  </div>\n  <form id=\"place-form\" ng-show=\"config.showForm\" ng-submit=\"submitReview(review)\">\n    <div class=\"form-group\">\n      <div class=\"btn-group\">\n        <div><strong>I would recommend this place</strong></div>\n        <label class=\"btn btn-default\" ng-model=\"review.would_recommend\" uib-btn-radio=\"true\">Yes</label>\n        <label class=\"btn btn-default\" ng-model=\"review.would_recommend\" uib-btn-radio=\"false\">No</label>\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <label>Comment</label>\n      <textarea ng-model=\"review.comment\"\n                ng-required=\"true\"\n                class=\"form-control\"></textarea>\n    </div>\n    <input class=\"btn btn-primary\" type=\"submit\" />\n    <a href=\"#\" ng-click=\"config.showForm = false\">hide</a>\n  </form>\n  <uib-tabset active=\"active\">\n    <uib-tab index=\"0\" heading=\"{{belinkoHeading}}\">\n      <belinko-reviews show-form=\"config.showForm\" reviews=\"place.belinko_reviews\"></belinko-reviews>\n    </uib-tab>\n    <uib-tab index=\"1\" heading=\"{{googleHeading}}\">\n      <google-reviews reviews=\"place.reviews\"></google-reviews>\n    </uib-tab>\n  </uib-tabset>\n</div>\n";
+app.directive('placeDetail', ['PlaceDetailHelper','Api',
+function(PlaceDetailHelper,Api){
   return {
     restrict: 'E',
     template: templateHTML,
     scope: {
         place: '=',
     },
-    link: link(PlaceDetailHelper),
+    link: link(PlaceDetailHelper,Api),
   };
 }]);
 
-function link(helper){
+function link(helper,Api){
   return function($scope,elem,attrs){
     $scope.config = {
       showForm: false,
@@ -359,6 +361,9 @@ function link(helper){
      */
     $scope.$watch('place.place_id',helper.reset($scope));
 
+    $scope.submitReview = function(review){
+      Api.addReview(review).then(function(resp){debugger;},function(resp,err){debugger;});
+    };
   };
 };
 
@@ -375,8 +380,15 @@ app.service('PlaceDetailHelper',[function(){
   this.reset = function($scope){
     return function(newValue,oldValue){
       if(newValue !== oldValue){
+        var place = $scope.place;
         $scope.review = {
-          would_recommend: true
+          would_recommend: true,
+          place: {
+            name: place.name,
+            latitude: place.geometry.location.lat,
+            longitude: place.geometry.location.lng,
+            gid: place.place_id
+          }
         };
         $scope.config = {
           showForm: false,
@@ -530,7 +542,7 @@ function($location,$q){
   this.client_id = '561265827354748';
   this.client_secret = 'ebb4ed4353b0e928c0b1093daab7b8af';
   this.redirect_uri = 'http://localhost:4000/login';
-  this.permissions = 'email,user_friends';
+  this.permissions = 'email,user_friends,public_profile';
 
   /**
    * make a request to the Facebook Api
@@ -718,6 +730,18 @@ app.factory('Api', ['$http', '$resource','FacebookHelper','$q','auth',function($
         params: { id: id }
       });
     },
+
+    /**
+     * create a new review
+     * @param {Object} params
+     */
+    addReview: function(params){
+      return $http({
+        url: apiBase + '/reviews/',
+        method: "POST",
+        data: { review: params }
+      });
+    },
   };
 
 
@@ -756,7 +780,7 @@ app.config(['$resourceProvider', '$httpProvider', function($resourceProvider, $h
           _.extend(config.headers,{"Accept": "application/vnd.belinko.v1"});
 
           if (auth.currentUser && auth.currentUser.token) {
-            config.headers.Authorization = 'Token ' + auth.currentUser.token;
+            config.headers.Authorization =  auth.currentUser.token;
           }
         }
         return config;

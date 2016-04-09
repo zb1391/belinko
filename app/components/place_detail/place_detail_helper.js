@@ -10,8 +10,15 @@ app.service('PlaceDetailHelper',[function(){
   this.reset = function($scope){
     return function(newValue,oldValue){
       if(newValue !== oldValue){
+        var place = $scope.place;
         $scope.review = {
-          would_recommend: true
+          would_recommend: true,
+          place: {
+            name: place.name,
+            latitude: place.geometry.location.lat,
+            longitude: place.geometry.location.lng,
+            gid: place.place_id
+          }
         };
         $scope.config = {
           showForm: false,
