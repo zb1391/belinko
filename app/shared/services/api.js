@@ -76,6 +76,18 @@ app.factory('Api', ['$http', '$resource','FacebookHelper','$q','auth',function($
         params: { id: id }
       });
     },
+
+    /**
+     * create a new review
+     * @param {Object} params
+     */
+    addReview: function(params){
+      return $http({
+        url: apiBase + '/reviews/',
+        method: "POST",
+        data: { review: params }
+      });
+    },
   };
 
 
@@ -114,7 +126,7 @@ app.config(['$resourceProvider', '$httpProvider', function($resourceProvider, $h
           _.extend(config.headers,{"Accept": "application/vnd.belinko.v1"});
 
           if (auth.currentUser && auth.currentUser.token) {
-            config.headers.Authorization = 'Token ' + auth.currentUser.token;
+            config.headers.Authorization =  auth.currentUser.token;
           }
         }
         return config;
