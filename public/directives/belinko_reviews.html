@@ -1,5 +1,18 @@
-<div>
+<div class="reviews">
+  <h2>Belinko Reviews</h2>
+  <div ng-show="!reviews.length">
+    <h3>There are no reviews for this place</h3>
+    <button class="btn btn-primary"
+            ng-click="showForm = true">Add Review</button>
+  </div>
+<!--  <div ng-show="!reviews || !reviews.length">
+    <h3>There are no reviews for this place</h3>
+    <button clas="btn btn-primary"
+            ng-click="showForm = true">Add Review</button>
+  </div> -->
   <div ng-repeat="review in reviews">
-    <p>{{review}}</p>
+    <b>{{review.author_name}}</b>
+    <i>{{review.rating}} out of 5</i>
+    <p>{{review.text}}</p>
   </div>
 </div>

@@ -14,8 +14,8 @@ describe("placeDetail",function(){
     isolate = element.scope().$$childHead;
   }));
 
-  it('initializes scope.showForm to false',function(){
-    expect(isolate.showForm).toEqual(false);
+  it('initializes scope.config,showForm to false',function(){
+    expect(isolate.config.showForm).toEqual(false);
   });
 
   it('initializes scope.review',function(){
@@ -25,7 +25,7 @@ describe("placeDetail",function(){
   describe('when place.place_id changes',function(){
     beforeEach(function(){
       isolate.review.comment = "test";
-      isolate.showForm = true;
+      isolate.config.showForm = true;
       isolate.place.place_id = "123";
       isolate.$digest();
     });
@@ -35,7 +35,7 @@ describe("placeDetail",function(){
     });
 
     it('sets showForm to false',function(){
-      expect(isolate.showForm).toEqual(false);
+      expect(isolate.config.showForm).toEqual(false);
     });
 
     it('sets the belinkoHeading',function(){

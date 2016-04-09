@@ -5,9 +5,9 @@
     <i>{{place.formatted_address}}</i>
     <i>{{place.formatted_phone_number}}</i>
     <button class="btn btn-belinko-purple" 
-            ng-click="showForm = true">Add Review</button>
+            ng-click="config.showForm = true">Add Review</button>
   </div>
-  <form id="place-form" ng-show="showForm" ng-submit="submitReview()">
+  <form id="place-form" ng-show="config.showForm" ng-submit="submitReview()">
     <div class="form-group">
       <div class="btn-group">
         <div><strong>I would recommend this place</strong></div>
@@ -22,11 +22,11 @@
                 class="form-control"></textarea>
     </div>
     <input class="btn btn-primary" type="submit" />
-    <a href="#" ng-click="showForm = false">hide</a>
+    <a href="#" ng-click="config.showForm = false">hide</a>
   </form>
   <uib-tabset active="active">
     <uib-tab index="0" heading="{{belinkoHeading}}">
-      <belinko-reviews reviews="place.belinko_reviews"></belinko-reviews>
+      <belinko-reviews show-form="config.showForm" reviews="place.belinko_reviews"></belinko-reviews>
     </uib-tab>
     <uib-tab index="1" heading="{{googleHeading}}">
       <google-reviews reviews="place.reviews"></google-reviews>

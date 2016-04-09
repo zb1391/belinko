@@ -15,7 +15,9 @@ app.directive('placeDetail', ['PlaceDetailHelper',function(PlaceDetailHelper){
 
 function link(helper){
   return function($scope,elem,attrs){
-    $scope.showForm = false;
+    $scope.config = {
+      showForm: false,
+    };
     $scope.review = {
       would_recommend: true,
     };

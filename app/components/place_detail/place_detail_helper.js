@@ -13,7 +13,9 @@ app.service('PlaceDetailHelper',[function(){
         $scope.review = {
           would_recommend: true
         };
-        $scope.showForm = false;
+        $scope.config = {
+          showForm: false,
+        };
         $scope.belinkoHeading = self.belinkoHeading($scope.place);
         $scope.googleHeading = self.googleHeading($scope.place);
         $scope.active = 0;
