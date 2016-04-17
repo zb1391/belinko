@@ -35,7 +35,6 @@ app.service('LoginHelper',['$location','Alerts',function($location,Alerts){
   this.loginSuccess = function(response){
     $location.url('/my-account');
     response = response || {};
-debugger;
     var data = response.data || {};
     var msg = "Welcome to Belinko";
     if(data.name){
@@ -542,7 +541,7 @@ function($location,$q){
   this.client_id = '561265827354748';
   this.client_secret = 'ebb4ed4353b0e928c0b1093daab7b8af';
   this.redirect_uri = 'http://localhost:4000/login';
-  this.permissions = 'email,user_friends,public_profile';
+  this.permissions = 'email,user_friends';
 
   /**
    * make a request to the Facebook Api

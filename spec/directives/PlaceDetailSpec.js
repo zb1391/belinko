@@ -1,13 +1,22 @@
 beforeEach(angular.mock.module("app"));
 var getCompiledElement = require('../support/getCompiledElement.js');
-var place;
+var place; 
 
 var elem = '<place-detail place="place"></place-detail>';
 describe("placeDetail",function(){
   var element, scope, isolate;
 
   beforeEach(inject(function($rootScope, $compile){
-    place = {reviews: [],belinko_reviews: []};
+    place = {
+      reviews: [],
+      belinko_reviews: [],
+      geometry: {
+        location: {
+          lat: '123',
+          lng: '456',
+        }
+      },
+    };
     scope = $rootScope.$new();
     scope.place = place;
     element = getCompiledElement(angular,$compile,scope,elem);
@@ -31,7 +40,7 @@ describe("placeDetail",function(){
     });
 
     it('resets the review object',function(){
-      expect(isolate.review).toEqual({ would_recommend: true });
+      expect(isolate.review.would_recommend).toEqual(true);
     });
 
     it('sets showForm to false',function(){
