@@ -284,7 +284,7 @@ function MyAccountController($scope,$injector){
 var app = require('angular').module('app');
 
 
-var templateHTML = "<div class=\"reviews\">\n  <h2>Belinko Reviews</h2>\n  <div ng-show=\"!reviews.length\">\n    <h3>There are no reviews for this place</h3>\n    <button class=\"btn btn-primary\"\n            ng-click=\"showForm = true\">Add Review</button>\n  </div>\n<!--  <div ng-show=\"!reviews || !reviews.length\">\n    <h3>There are no reviews for this place</h3>\n    <button clas=\"btn btn-primary\"\n            ng-click=\"showForm = true\">Add Review</button>\n  </div> -->\n  <div ng-repeat=\"review in reviews\">\n    <b>{{review.author_name}}</b>\n    <i>{{review.rating}} out of 5</i>\n    <p>{{review.text}}</p>\n  </div>\n</div>\n";
+var templateHTML = "<div class=\"reviews\">\n  <h2>Belinko Reviews</h2>\n  <div ng-show=\"!reviews.length\">\n    <h3>There are no reviews for this place</h3>\n    <button class=\"btn btn-primary\"\n            ng-click=\"showForm = true\">Add Review</button>\n  </div>\n<!--  <div ng-show=\"!reviews || !reviews.length\">\n    <h3>There are no reviews for this place</h3>\n    <button clas=\"btn btn-primary\"\n            ng-click=\"showForm = true\">Add Review</button>\n  </div> -->\n  <div ng-repeat=\"review in reviews\">\n    <img src=\"{{review.user.thumbnail}}\" />\n    <b>{{review.user.name}}</b>\n    <p>{{review.comment}}</p>\n  </div>\n</div>\n";
 
 app.directive('belinkoReviews',[ function(){
   return {

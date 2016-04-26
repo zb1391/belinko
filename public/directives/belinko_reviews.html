@@ -11,8 +11,8 @@
             ng-click="showForm = true">Add Review</button>
   </div> -->
   <div ng-repeat="review in reviews">
-    <b>{{review.author_name}}</b>
-    <i>{{review.rating}} out of 5</i>
-    <p>{{review.text}}</p>
+    <img src="{{review.user.thumbnail}}" />
+    <b>{{review.user.name}}</b>
+    <p>{{review.comment}}</p>
   </div>
 </div>
