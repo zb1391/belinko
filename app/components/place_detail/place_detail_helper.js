@@ -1,6 +1,6 @@
 var app = require('angular').module('app');
 
-app.service('PlaceDetailHelper',[function(){
+app.service('PlaceDetailHelper',['Alerts',function(Alerts){
   var self = this;
 
   /**
@@ -46,5 +46,21 @@ app.service('PlaceDetailHelper',[function(){
    */
   this.googleHeading = function(place){
     return "Google Reviews ("+place.reviews.length+")";
+  };
+
+
+  this.reviewSuccess = function($scope){
+    return function(response){
+      var review = response.data;
+      $scope.place.belinko_reviews.unshift(review);
+      Alerts.addAlert({type: 'success', msg: 'Added Review!'});
+     self.reset($scope)(true);
+    };
+  };
+
+  this.reviewError = function($scope){
+    return function(response){
+      debugger;
+    };
   };
 }]);

@@ -31,7 +31,9 @@ function link(helper,Api){
     $scope.$watch('place.place_id',helper.reset($scope));
 
     $scope.submitReview = function(review){
-      Api.addReview(review).then(function(resp){debugger;},function(resp,err){debugger;});
+      Api.saveReview(review)
+         .then(helper.reviewSuccess($scope))
+         .catch(helper.reviewError($scope));
     };
   };
 };

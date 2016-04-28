@@ -361,7 +361,9 @@ function link(helper,Api){
     $scope.$watch('place.place_id',helper.reset($scope));
 
     $scope.submitReview = function(review){
-      Api.addReview(review).then(function(resp){debugger;},function(resp,err){debugger;});
+      Api.saveReview(review)
+         .then(helper.reviewSuccess($scope))
+         .catch(helper.reviewError($scope));
     };
   };
 };
@@ -369,7 +371,7 @@ function link(helper,Api){
 },{"angular":30}],14:[function(require,module,exports){
 var app = require('angular').module('app');
 
-app.service('PlaceDetailHelper',[function(){
+app.service('PlaceDetailHelper',['Alerts',function(Alerts){
   var self = this;
 
   /**
@@ -415,6 +417,22 @@ app.service('PlaceDetailHelper',[function(){
    */
   this.googleHeading = function(place){
     return "Google Reviews ("+place.reviews.length+")";
+  };
+
+
+  this.reviewSuccess = function($scope){
+    return function(response){
+      var review = response.data;
+      $scope.place.belinko_reviews.unshift(review);
+      Alerts.addAlert({type: 'success', msg: 'Added Review!'});
+     self.reset($scope)(true);
+    };
+  };
+
+  this.reviewError = function($scope){
+    return function(response){
+      debugger;
+    };
   };
 }]);
 
@@ -734,7 +752,7 @@ app.factory('Api', ['$http', '$resource','FacebookHelper','$q','auth',function($
      * create a new review
      * @param {Object} params
      */
-    addReview: function(params){
+    saveReview: function(params){
       return $http({
         url: apiBase + '/reviews/',
         method: "POST",

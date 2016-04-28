@@ -81,7 +81,7 @@ app.factory('Api', ['$http', '$resource','FacebookHelper','$q','auth',function($
      * create a new review
      * @param {Object} params
      */
-    addReview: function(params){
+    saveReview: function(params){
       return $http({
         url: apiBase + '/reviews/',
         method: "POST",

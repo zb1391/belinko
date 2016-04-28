@@ -1,13 +1,20 @@
+var _ = require('lodash');
 beforeEach(angular.mock.module("app"));
 var getCompiledElement = require('../support/getCompiledElement.js');
 var place; 
 
 var elem = '<place-detail place="place"></place-detail>';
 describe("placeDetail",function(){
-  var element, scope, isolate;
+  var element, scope, isolate,q,deferred,AlertsFactory;
 
-  beforeEach(inject(function($rootScope, $compile){
+  beforeEach(inject(function($rootScope, $compile,$q,_Api_,_AlertsFactory_){
+    q = $q;
+    deferred = $q.defer();
+    Api = _Api_;
+    AlertsFactory = _AlertsFactory_;
     place = {
+      name: 'test',
+      gid: '1',
       reviews: [],
       belinko_reviews: [],
       geometry: {
@@ -55,6 +62,38 @@ describe("placeDetail",function(){
     it('sets the googleHeading',function(){
       var expected = "Google Reviews (0)";
       expect(isolate.googleHeading).toEqual(expected);
+    });
+  });
+
+  describe('scope.submitReview',function(){
+    beforeEach(function(){
+      spyOn(Api,'saveReview').and.returnValue(deferred.promise);
+      isolate.submitReview({comment: 'test'});
+    });
+
+    it('calls Api.saveReview',function(){
+      expect(Api.saveReview).toHaveBeenCalled();
+    });
+
+    describe('when successful',function(){
+      var review;
+      beforeEach(function(){
+        review = { id: 1, comment: 'test' };
+        deferred.resolve({data: review});
+        scope.$apply();
+      });
+
+      it('adds to the isolate.belinko_reviews array',function(){
+        expect(isolate.place.belinko_reviews[0]).toEqual(review);
+      });
+
+      it('adds a success Alert',function(){
+        expect(AlertsFactory[0].type).toEqual('success');
+      });
+
+      it('sets showForm to false',function(){
+        expect(isolate.config.showForm).toEqual(false);
+      });
     });
   });
 });
