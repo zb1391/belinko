@@ -5864,9 +5864,20 @@ button.close {
           border-radius: 50%; }
       #map-page #location-detail .location-content .reviews {
         padding: 5px 15px; }
+    @media (max-width: 991px) {
+      #map-page #location-detail {
+        position: static; }
+        #map-page #location-detail .location-content {
+          overflow-y: visible; } }
   #map-page .half-width {
     width: 50% !important;
     display: inline-block !important; }
+    @media (max-width: 991px) {
+      #map-page .half-width {
+        width: 100% !important;
+        display: block !important; }
+        #map-page .half-width:first-child {
+          height: 200px !important; } }
   #map-page #place-form {
     padding: 10px 15px; }
     #map-page #place-form .btn-group .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {

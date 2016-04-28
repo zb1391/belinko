@@ -50,11 +50,26 @@
         padding: 5px 15px;
       }
     }
+
+    @media(max-width: $screen-sm-max) {
+      position: static;
+      .location-content {
+        overflow-y: visible;
+      }
+    }
   }
 
   .half-width{
     width: 50% !important;
     display: inline-block !important;
+
+    @media(max-width: $screen-sm-max){
+      width: 100% !important;
+      display: block !important;
+      &:first-child {
+        height: 200px !important;
+      }
+    }
   }
 
   #place-form{
