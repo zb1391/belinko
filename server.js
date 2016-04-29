@@ -7,6 +7,8 @@ var resourceDirs = [
     '/js',
     '/css',
     '/partials',
+    '/directives',
+    '/fonts/',
 ];
 
 resourceDirs.forEach(function(path, index){

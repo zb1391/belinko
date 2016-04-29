@@ -27,6 +27,7 @@ gulp.task('sass', function() {
   return sass('app/styles/main.scss',{
     loadPath: [
       'node_modules/bootstrap-sass/assets/stylesheets/',
+      'node_modules/boostrap-sass/assets/fonts/',
       'app/styles/components/'
     ],
   })
