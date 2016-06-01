@@ -140,7 +140,7 @@ app.directive('map',['MapHelper',function(MapHelper){
   return {
     restrict: 'A',
     scope: {
-      detail: '@',
+      show: '=',
     },
     link: link(MapHelper),
   };
@@ -148,7 +148,16 @@ app.directive('map',['MapHelper',function(MapHelper){
 
 function link(MapHelper){
   return function($scope,elem,attr){
+    var oldValue;
 
+    $scope.$watch('show',function(newValue,oldValue){
+      if(newValue === true){
+        elem.addClass('half-width');
+      } else {
+        elem.removeClass('half-width');
+      }
+      MapHelper.resizeMap(newValue,oldValue);
+    }); 
   };
 };
 
@@ -188,22 +197,16 @@ app.service('MapHelper',['Api','GoogleMapFactory',function(Api,GoogleMapFactory)
     };
   };
 
-
-  // this is where i am currently stuck
-  // it needs to call resize after the rendering
-  // what is happening here is that the resize call is happening when the value changes
-  // but it is calling it before the rendering of the new dimensions.
-  // i should look for a way to watch the dimensions of of a div and when it changes
-  // from 100% -> 50% or vice versa trigger the resize
-  //
-  // i think i can create a directive called map or something
-  // and watch changes to the css class
-  // http://stackoverflow.com/questions/21693064/monitor-for-class-changing-on-element-in-angularjs-directive
+  /**
+   * resize the map if the new and old value are different
+   * @param newValue
+   * @param oldValue
+   *
+   */
   this.resizeMap = function(newValue,oldValue){
-    if(!newValue && newValue !== oldValue){
-      var map = GoogleMapFactory.map;
+    var map = GoogleMapFactory.map;
+    if(map && newValue !== oldValue){
       GoogleMapFactory.google.maps.event.trigger(map,'resize');
-debugger;
     }
   }
 }]);
