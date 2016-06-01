@@ -42,4 +42,17 @@ describe('MapHelper',function(){
       });
     });
   });
+
+  describe("closePlace",function(){
+    var fn;
+    beforeEach(function(){
+      scope.place = {};
+      fn = MapHelper.closePlace(scope);
+    });
+
+    it('sets scope.showDetail to false',function(){
+      fn();
+      expect(scope.showDetail).toEqual(false);
+    });
+  });
 });

@@ -2,8 +2,9 @@ var _ = require('lodash');
 beforeEach(angular.mock.module("app"));
 var getCompiledElement = require('../support/getCompiledElement.js');
 var place; 
+var close = function(){};
 
-var elem = '<place-detail place="place"></place-detail>';
+var elem = '<place-detail place="place" close="close"></place-detail>';
 describe("placeDetail",function(){
   var element, scope, isolate,q,deferred,AlertsFactory;
 
@@ -26,6 +27,7 @@ describe("placeDetail",function(){
     };
     scope = $rootScope.$new();
     scope.place = place;
+    scope.close = close;
     element = getCompiledElement(angular,$compile,scope,elem);
     isolate = element.scope().$$childHead;
   }));
@@ -36,6 +38,10 @@ describe("placeDetail",function(){
 
   it('initializes scope.review',function(){
     expect(isolate.review).toEqual({ would_recommend: true });
+  });
+
+  it('links to scope.close',function(){
+    expect(isolate.close).toEqual(close);
   });
 
   describe('when place.place_id changes',function(){

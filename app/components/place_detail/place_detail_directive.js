@@ -8,7 +8,8 @@ function(PlaceDetailHelper,Api){
     restrict: 'E',
     template: templateHTML,
     scope: {
-        place: '=',
+      place: '=',
+      close: '=',  
     },
     link: link(PlaceDetailHelper,Api),
   };

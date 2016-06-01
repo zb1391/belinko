@@ -5862,6 +5862,9 @@ button.close {
           padding: 2px;
           border: 1px solid white;
           border-radius: 50%; }
+        #map-page #location-detail .location-content .location-header .glyphicon {
+          text-align: left;
+          padding-left: 8px; }
       #map-page #location-detail .location-content .reviews {
         padding: 5px 15px; }
     @media (max-width: 991px) {

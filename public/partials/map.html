@@ -1,6 +1,6 @@
 <div id="map-page">
-  <div id="map" ng-class="{'half-width': showDetail}"></div>
+  <div map detail="{{showDetail}}" id="map" ng-class="{'half-width': showDetail}"></div>
   <div id="location-detail" ng-class="{'half-width': showDetail}">
-    <place-detail place="place" ng-show="place"></place-detail>
+    <place-detail place="place" ng-show="place && showDetail" close="closePlace"></place-detail>
   </div>
 </div>

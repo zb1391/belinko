@@ -13,6 +13,9 @@ function MapController($scope,$injector){
   var MarkerHelper = $injector.get('MarkerHelper');
   var MapHelper    = $injector.get('MapHelper');
 
+  // for closing the place detail
+  $scope.closePlace = MapHelper.closePlace($scope);
+
   $scope.geo = new Geolocator();
   var promise = $scope.geo.getCurrentPosition();
 
@@ -35,4 +38,6 @@ function MapController($scope,$injector){
       });
     });
   });
+
+//  $scope.$watch('showDetail',MapHelper.resizeMap);
 };
