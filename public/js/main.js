@@ -147,8 +147,6 @@ app.directive('map',['MapHelper',function(MapHelper){
 
 function link(MapHelper){
   return function($scope,elem,attr){
-    var oldValue;
-
     $scope.$watch('show',function(newValue,oldValue){
       if(newValue === true){
         elem.addClass('half-width');
