@@ -39,5 +39,4 @@ function MapController($scope,$injector){
     });
   });
 
-//  $scope.$watch('showDetail',MapHelper.resizeMap);
 };

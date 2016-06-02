@@ -130,7 +130,6 @@ function MapController($scope,$injector){
     });
   });
 
-//  $scope.$watch('showDetail',MapHelper.resizeMap);
 };
 
 },{"../../shared/controllers/authenticated_controller.js":18,"angular":31,"google-maps":145,"lodash":199}],7:[function(require,module,exports){
