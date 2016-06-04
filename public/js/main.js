@@ -112,6 +112,7 @@ function MapController($scope,$injector){
 
   $scope.markers = [];
   $scope.showDetail = false;
+  $scope.view = 'map';
 
   // load the map
   promise.then(MapLoader.loadMap,MapLoader.loadMappError);
@@ -130,6 +131,10 @@ function MapController($scope,$injector){
     });
   });
 
+  $scope.changeView = function(val){
+    $scope.view = val;
+    $scope.showDetail = false;
+  };
 };
 
 },{"../../shared/controllers/authenticated_controller.js":18,"angular":31,"google-maps":145,"lodash":199}],7:[function(require,module,exports){

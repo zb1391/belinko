@@ -1,10 +1,17 @@
 <div id="map-page">
   <div id="map-container" map show="showDetail">
     <div class="icon">
-      <span class="glyphicon glyphicon-user"></span>
-      <span class="glyphicon glyphicon-search"></span>
+      <span ng-click="changeView('map')" ng-hide="view === 'map'" class="glyphicon glyphicon-map-marker"></span>
+      <span ng-click="changeView('friends')" class="glyphicon glyphicon-user"></span>
+      <span ng-click="changeView('search')"  class="glyphicon glyphicon-search"></span>
     </div>
-    <div id="map"></div>
+    <div ng-show="view === 'search'">
+      <h1>Hello Search</h1>
+    </div>
+    <div ng-show="view === 'friends'">
+      <h1>Hello Friends</h1>
+    </div>
+    <div ng-show="view === 'map'" id="map"></div>
   </div>
   <div id="location-detail" ng-class="{'half-width': showDetail}">
     <place-detail place="place" ng-show="place && showDetail" close="closePlace"></place-detail>

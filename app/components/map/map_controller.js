@@ -21,6 +21,7 @@ function MapController($scope,$injector){
 
   $scope.markers = [];
   $scope.showDetail = false;
+  $scope.view = 'map';
 
   // load the map
   promise.then(MapLoader.loadMap,MapLoader.loadMappError);
@@ -39,4 +40,8 @@ function MapController($scope,$injector){
     });
   });
 
+  $scope.changeView = function(val){
+    $scope.view = val;
+    $scope.showDetail = false;
+  };
 };
